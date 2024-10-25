@@ -35,7 +35,7 @@ public class ProfileSchedulerService {
 
     @Scheduled(cron = "0 0 0 * * *")    // 매 자정(0시)마다 실행
     public void syncVisitorCountToDB() {
-        List<RedisVisitor> redisEntities = redisVisitService.findAllVisitor();
+        List<RedisVisitor> redisEntities = redisVisitService.findAndDeleteAllVisitor();
         List<ProfileVisitor> dbEntities = redisEntities.stream()
                 .map(redis -> ProfileVisitor.builder()
                         .visitorIp(redis.getVisitorIp())
