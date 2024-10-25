@@ -27,4 +27,16 @@ public class RedisVisitor {
     @NotNull
     @TimeToLive(unit = TimeUnit.SECONDS)
     private Long expiresIn;
+
+    public Long getHostId() {
+        return hostId;
+    }
+
+    public @NotNull String getVisitorIp() {
+        return visitorIp;
+    }
+
+    public @NotNull LocalDateTime getVisitTime() {
+        return visitTime;
+    }
 }

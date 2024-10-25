@@ -11,6 +11,8 @@ import supernova.whokie.redis.service.dto.RedisCommand;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -57,5 +59,17 @@ public class RedisVisitService {
                     RedisCommand.Visited command = profileVisitReadService.findVisitCountById(hostId);
                     return command.toRedisEntity();
                 });
+    }
+
+    public List<RedisVisitCount> findAllVisitCount() {
+        List<RedisVisitCount> visitCountList = new ArrayList<>();
+        redisVisitCountRepository.findAll().forEach(visitCountList::add);
+        return visitCountList;
+    }
+
+    public List<RedisVisitor> findAllVisitor() {
+        List<RedisVisitor> visitorList = new ArrayList<>();
+        redisVisitorRepository.findAll().forEach(visitorList::add);
+        return visitorList;
     }
 }
