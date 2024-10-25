@@ -14,6 +14,7 @@ public class SchedulerConfig {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(5);   // 최대 스레드 수
         scheduler.setThreadNamePrefix("Scheduler-");
+        scheduler.initialize();
         return scheduler;
     }
 }
