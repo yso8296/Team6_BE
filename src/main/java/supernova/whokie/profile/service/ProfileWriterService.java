@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.profile.Profile;
 import supernova.whokie.profile.infrastructure.repository.ProfileRepository;
 import supernova.whokie.user.Users;
-import supernova.whokie.user.infrastructure.apiCaller.dto.KakaoAccount;
+import supernova.whokie.user.infrastructure.apicaller.dto.KakaoAccount;
 
 @RequiredArgsConstructor
 @Service
