@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import supernova.whokie.group.Groups;
-import supernova.whokie.group.repository.GroupRepository;
+import supernova.whokie.group.infrastructure.repository.GroupRepository;
 import supernova.whokie.ranking.Ranking;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
@@ -49,9 +49,9 @@ class RankingRepositoryTest {
         List<Ranking> rankings1 = rankings.stream()
                 .filter(ranking -> ranking.getUsers() == user)
                 .toList();
+      
         // when
         List<Ranking> actual = rankingRepository.findTop3ByUsers_IdOrderByCountDesc(user.getId());
-
 
         // then
         assertAll(
@@ -128,6 +128,7 @@ class RankingRepositoryTest {
                 .groups(groups.get(1)).build();
         Ranking ranking4 = Ranking.builder().id(4L).question("q4").users(users.get(1)).count(80)
                 .groups(groups.get(1)).build();
+      
         return rankingRepository.saveAll(List.of(ranking1, ranking2, ranking3, ranking4));
     }
 }
