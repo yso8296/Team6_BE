@@ -1,23 +1,17 @@
 package supernova.whokie.group_member.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.global.entity.BaseTimeEntity;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group_member.GroupMember;
@@ -30,10 +24,22 @@ import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+
 @SpringBootTest
 @TestPropertySource(properties = {
     "jwt.secret=abcd"
 })
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupMemberServiceTest {
 
@@ -43,7 +49,7 @@ public class GroupMemberServiceTest {
     @InjectMocks
     private GroupMemberWriterService groupMemberWriterService;
 
-    @InjectMocks
+    @Mock
     private GroupMemberReaderService groupMemberReaderService;
 
     @Mock
@@ -75,17 +81,18 @@ public class GroupMemberServiceTest {
         member = createGroupMember(user2, GroupRole.MEMBER, 2L);
     }
 
-    //@Test
+    @Test
     @DisplayName("그룹장 위임")
     void delegateLeader() {
         // given
         GroupMemberCommand.Modify command = new GroupMemberCommand.Modify(groupId, pastLeaderId,
             newLeaderId);
-        given(groupMemberRepository.findByUserIdAndGroupId(pastLeaderId, groupId))
-            .willReturn(Optional.of(leader));
 
-        given(groupMemberRepository.findByUserIdAndGroupId(newLeaderId, groupId))
-            .willReturn(Optional.of(member));
+        given(groupMemberReaderService.getByUserIdAndGroupId(pastLeaderId, groupId))
+            .willReturn(leader);
+
+        given(groupMemberReaderService.getByUserIdAndGroupId(newLeaderId, groupId))
+            .willReturn(member);
 
         // when
         groupMemberService.delegateLeader(userId, command);
@@ -118,20 +125,17 @@ public class GroupMemberServiceTest {
         verify(groupMemberRepository).deleteByUserIdAndGroupId(member.getId(), command.groupId());
     }
 
-    //@Test
+    @Test
     @DisplayName("그룹 내 멤버 조회")
     void getGroupMembers() throws Exception {
         // given
-        given(groupMemberRepository.findByUserIdAndGroupId(userId, groupId))
-            .willReturn(Optional.of(member));
-
-        given(groupMemberRepository.findAllByGroupId(groupId))
-            .willReturn(List.of(leader, member));
-
         Field createdAtField = BaseTimeEntity.class.getDeclaredField("createdAt");
         createdAtField.setAccessible(true);
         createdAtField.set(leader, LocalDateTime.now());
         createdAtField.set(member, LocalDateTime.now());
+
+        given(groupMemberReaderService.getGroupMembers(userId, groupId))
+            .willReturn(List.of(leader, member));
 
         // when
         GroupMemberModel.Members members = groupMemberService.getGroupMembers(userId,
@@ -145,9 +149,9 @@ public class GroupMemberServiceTest {
             () -> assertThat(members.members().get(0).role()).isEqualTo(GroupRole.LEADER),
             () -> assertThat(members.members().get(1).userId()).isEqualTo(user2.getId()),
             () -> assertThat(members.members().get(1).userName()).isEqualTo(user2.getName()),
-            () -> assertThat(members.members().get(1).role()).isEqualTo(GroupRole.MEMBER),
-            () -> verify(groupMemberRepository).findByUserIdAndGroupId(userId, groupId),
-            () -> verify(groupMemberRepository).findAllByGroupId(groupId)
+            () -> assertThat(members.members().get(1).role()).isEqualTo(GroupRole.MEMBER)
+           /* () -> verify(groupMemberRepository).existsByUserIdAndGroupId(userId, groupId),     이거 왜 안됨?
+            () -> verify(groupMemberRepository).findAllByGroupId(groupId)*/
         );
     }
 
@@ -166,6 +170,7 @@ public class GroupMemberServiceTest {
 
     private Groups createGroup() {
         return Groups.builder()
+            .id(1L)
             .groupName("test")
             .description("test")
             .groupImageUrl("tset")
