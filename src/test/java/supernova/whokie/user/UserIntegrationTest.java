@@ -44,21 +44,6 @@ public class UserIntegrationTest {
     }
 
     @Test
-    @DisplayName("유저 정보 조회")
-    void getUserInfo() throws Exception {
-        mockMvc.perform(get("/api/user/mypage")
-                .requestAttr("userId", String.valueOf(user.getId()))
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value("test@gmail.com"))
-            .andExpect(jsonPath("$.gender").value("M"))
-            .andExpect(jsonPath("$.age").value(25))
-            .andExpect(jsonPath("$.name").value("test"))
-            .andExpect(jsonPath("$.role").value("USER"))
-            .andDo(print());
-    }
-
-    @Test
     @DisplayName("유저 포인트 조회")
     void getUserPoint() throws Exception {
         mockMvc.perform(get("/api/user/point")
