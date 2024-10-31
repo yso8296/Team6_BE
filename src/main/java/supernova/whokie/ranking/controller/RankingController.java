@@ -26,7 +26,7 @@ public class RankingController {
 
     @GetMapping("/group/{group-id}")
     public RankingResponse.Ranks getGroupRanking(
-            @PathVariable("group-Id") @NotNull @Min(1) Long groupId,
+            @PathVariable("group-id") @NotNull @Min(1) Long groupId,
             @Authenticate Long userId
     ) {
         return RankingResponse.Ranks.from(rankingService.getGroupRanking(userId, groupId));
