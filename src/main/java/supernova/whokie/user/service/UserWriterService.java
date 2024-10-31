@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
-import supernova.whokie.user.infrastructure.apiCaller.dto.KakaoAccount;
-import supernova.whokie.user.infrastructure.apiCaller.dto.UserInfoResponse;
+import supernova.whokie.user.infrastructure.apicaller.dto.KakaoAccount;
+import supernova.whokie.user.infrastructure.apicaller.dto.UserInfoResponse;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
 @Service
