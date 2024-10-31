@@ -1,6 +1,5 @@
 package supernova.whokie.user.service;
 
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +19,8 @@ import supernova.whokie.user.infrastructure.apicaller.dto.UserInfoResponse;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 import supernova.whokie.user.service.dto.UserModel;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,7 +39,7 @@ public class UserService {
 
     //TODO 리팩 필요
     @Transactional
-    public String register(String code) {
+    public UserModel.Login register(String code) {
         // 토큰 발급
         TokenInfoResponse tokenResponse = userApiCaller.getAccessToken(code);
         String accessToken = tokenResponse.accessToken();
@@ -82,8 +83,8 @@ public class UserService {
 
         // kakao token 저장
         kakaoTokenService.saveToken(user.getId(), tokenResponse);
-
-        return jwtProvider.createToken(user.getId(), user.getRole());
+        String jwt = jwtProvider.createToken(user.getId(), user.getRole());
+        return UserModel.Login.from(jwt, user.getId());
     }
 
     public UserModel.Info getUserInfo(Long userId) {
