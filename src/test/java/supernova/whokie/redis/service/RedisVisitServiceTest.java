@@ -15,8 +15,8 @@ import supernova.config.EmbeddedRedisConfig;
 import supernova.whokie.profile.service.ProfileVisitReadService;
 import supernova.whokie.redis.entity.RedisVisitCount;
 import supernova.whokie.redis.entity.RedisVisitor;
-import supernova.whokie.redis.repository.RedisVisitCountRepository;
-import supernova.whokie.redis.repository.RedisVisitorRepository;
+import supernova.whokie.redis.infrastructure.repository.RedisVisitorRepository;
+import supernova.whokie.redis.infrastructure.repository.RedisVisitCountRepository;
 import supernova.whokie.redis.service.dto.RedisCommand;
 
 import java.util.ArrayList;
