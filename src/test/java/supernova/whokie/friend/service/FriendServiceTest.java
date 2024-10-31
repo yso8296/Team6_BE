@@ -43,6 +43,7 @@ class FriendServiceTest {
     private FriendReaderService friendReaderService;
     @Mock
     private UserReaderService userReaderService;
+  
     private List<KakaoDto.Profile> profiles;
     private List<Users> users;
 
@@ -79,7 +80,6 @@ class FriendServiceTest {
                 () -> assertThat(actual.get(2).isFriend()).isFalse()
         );
     }
-
 
     private List<KakaoDto.Profile> createProfiles() {
         KakaoDto.Profile profile1 = new KakaoDto.Profile(1L, "uuid1", false, "nickname1", "image1");
