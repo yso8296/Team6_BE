@@ -12,10 +12,7 @@ import supernova.whokie.user.infrastructure.apicaller.UserApiCaller;
 import supernova.whokie.user.infrastructure.apicaller.dto.KakaoAccount;
 import supernova.whokie.user.infrastructure.apicaller.dto.TokenInfoResponse;
 import supernova.whokie.user.infrastructure.apicaller.dto.UserInfoResponse;
-import supernova.whokie.user.infrastructure.repository.UserRepository;
 import supernova.whokie.user.service.dto.UserModel;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class UserService {
         Users user = userReaderService.findByEmail(kakaoAccount.email())
             .orElseGet(() -> {
                 Users newUser = userWriterService.saveUserFromKakao(userInfoResponse);
-                profileWriterService.saveFromKaKao(newUser, kakaoAccount);
+                profileWriterService.saveFromKaKao(newUser);
                 profileVisitWriterService.save(newUser.getId());
                 return newUser;
             });
