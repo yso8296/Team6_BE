@@ -13,10 +13,6 @@ import supernova.whokie.global.entity.BaseTimeEntity;
 @Entity
 public class ProfileVisitCount extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
     private Long hostId;
 
     @Column(nullable = false)
@@ -24,11 +20,6 @@ public class ProfileVisitCount extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int totalVisited;
-
-    public void visit() {
-        dailyVisited += 1;
-        totalVisited += 1;
-    }
 
     public Long getHostId() {
         return hostId;
