@@ -18,11 +18,13 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.config.EmbeddedRedisConfig;
 import supernova.whokie.profile.infrastructure.repository.ProfileRepository;
 import supernova.whokie.profile.infrastructure.repository.ProfileVisitCountRepository;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -47,6 +49,9 @@ public class ProfileIntegrationTest {
     @Autowired
     ProfileVisitCountRepository profileVisitCountRepository;
 
+    @MockBean
+    private S3Service s3Service;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -64,12 +69,15 @@ public class ProfileIntegrationTest {
     @Test
     @DisplayName("프로필 조회")
     void getProfileInfo() throws Exception {
+        String key = "keykey";
+        given(s3Service.getSignedUrl(profile.getBackgroundImageUrl())).willReturn(key);
+
         mockMvc.perform(get("/api/profile/{user-id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("test"))
             .andExpect(jsonPath("$.description").value("test"))
-            .andExpect(jsonPath("$.backgroundImageUrl").value("test"))
+            .andExpect(jsonPath("$.backgroundImageUrl").value(key))
             .andDo(print());
     }
 
