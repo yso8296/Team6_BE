@@ -3,7 +3,6 @@ package supernova.whokie.profile.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +39,7 @@ public class ProfileController {
             @RequestParam("type") @NotBlank String type,
             @RequestParam("image") @NotNull MultipartFile imageFile
     ) {
-        System.out.println(userId);
-        System.out.println(type);
+        profileService.updateImage(userId, imageFile, type);
         return ResponseEntity.ok().body(GlobalResponse.builder().message("이미지 업로드 성공").build());
     }
 }
