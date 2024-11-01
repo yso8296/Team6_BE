@@ -15,10 +15,10 @@ public class ProfileModel {
             int totalVisited
     ) {
 
-        public static ProfileModel.Info from(Profile profile, RedisVisitCount visitCount) {
+        public static ProfileModel.Info from(Profile profile, RedisVisitCount visitCount, String url) {
             return Info.builder()
                     .description(profile.getDescription())
-                    .backgroundImageUrl(profile.getBackgroundImageUrl())
+                    .backgroundImageUrl(url)
                     .name(profile.getUsers().getName())
                     .todayVisited(visitCount.getDailyVisited())
                     .totalVisited(visitCount.getTotalVisited())

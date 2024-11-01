@@ -25,8 +25,9 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public ProfileModel.Info getProfile(Long userId, String visitorIp) {
         Profile profile = profileReaderService.getByUserId(userId);
+        String url = s3Service.getSignedUrl(profile.getBackgroundImageUrl());
         RedisVisitCount visitCount = redisVisitService.visitProfile(userId, visitorIp);
-        return ProfileModel.Info.from(profile, visitCount);
+        return ProfileModel.Info.from(profile, visitCount, url);
     }
 
     @Transactional
