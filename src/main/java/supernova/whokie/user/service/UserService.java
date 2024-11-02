@@ -12,7 +12,6 @@ import supernova.whokie.profile.infrastructure.downloader.ImageDownloader;
 import supernova.whokie.profile.service.ProfileVisitWriterService;
 import supernova.whokie.profile.service.ProfileWriterService;
 import supernova.whokie.redis.service.KakaoTokenService;
-import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.event.UserEventDto;
 import supernova.whokie.user.infrastructure.apicaller.UserApiCaller;
@@ -33,7 +32,6 @@ public class UserService {
     private final UserReaderService userReaderService;
     private final KakaoTokenService kakaoTokenService;
     private final ImageDownloader imageDownloader;
-    private final S3Service s3Service;
     private final ApplicationEventPublisher eventPublisher;
 
     public String getCodeUrl() {
