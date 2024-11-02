@@ -19,6 +19,10 @@ public class S3Service {
         s3ServiceCaller.fileUpload(event.file(), event.key());
     }
 
+    public void uploadFile(MultipartFile file, String key) {
+        s3ServiceCaller.fileUpload(file, key);
+    }
+
     public String getSignedUrl(String key) {
         return s3ServiceCaller.getFileAsSignedUrl(key).toString();
     }
