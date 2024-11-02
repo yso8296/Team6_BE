@@ -30,6 +30,7 @@ public class ProfileService {
             imageUrl = s3Service.getSignedUrl(imageUrl);
         }
         String bgImgUrl = s3Service.getSignedUrl(profile.getBackgroundImageUrl());
+
         RedisVisitCount visitCount = redisVisitService.visitProfile(userId, visitorIp);
         return ProfileModel.Info.from(profile, visitCount, bgImgUrl, imageUrl);
     }

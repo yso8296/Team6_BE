@@ -87,6 +87,7 @@ public class ProfileServiceTest {
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)
+            .imageUrl("url")
             .build();
     }
 

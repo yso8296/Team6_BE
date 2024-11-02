@@ -57,13 +57,12 @@ public class ProfileIntegrationTest {
 
     private Users user;
     private Profile profile;
-    private ProfileVisitCount profileVisitCount;
 
     @BeforeEach
     void setUp() {
         user = createUser();
         profile = createProfile();
-        profileVisitCount = createProfileVisitCount();
+        ProfileVisitCount profileVisitCount = createProfileVisitCount();
     }
 
     @Test
@@ -90,6 +89,7 @@ public class ProfileIntegrationTest {
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)
+            .imageUrl("url")
             .build();
 
         return userRepository.save(user);
