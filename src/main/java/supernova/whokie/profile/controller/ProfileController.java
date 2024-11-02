@@ -33,13 +33,13 @@ public class ProfileController {
         return ResponseEntity.ok().body(ProfileResponse.Info.from(response));
     }
 
-    @PostMapping("bg/upload")
+    @PatchMapping("bg/upload")
     public ResponseEntity<GlobalResponse> uploadProfileBgImage(
             @Authenticate Long userId,
             @RequestParam("type") @NotBlank String type,
             @RequestParam("image") @NotNull MultipartFile imageFile
     ) {
         profileService.updateImage(userId, imageFile, type);
-        return ResponseEntity.ok().body(GlobalResponse.builder().message("이미지 업로드 성공").build());
+        return ResponseEntity.ok().body(GlobalResponse.builder().message("배경 이미지 업로드 성공").build());
     }
 }

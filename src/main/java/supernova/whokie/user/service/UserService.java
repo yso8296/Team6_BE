@@ -12,6 +12,8 @@ import supernova.whokie.profile.infrastructure.downloader.ImageDownloader;
 import supernova.whokie.profile.service.ProfileVisitWriterService;
 import supernova.whokie.profile.service.ProfileWriterService;
 import supernova.whokie.redis.service.KakaoTokenService;
+import supernova.whokie.s3.event.S3EventDto;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.event.UserEventDto;
 import supernova.whokie.user.infrastructure.apicaller.UserApiCaller;
@@ -33,6 +35,7 @@ public class UserService {
     private final KakaoTokenService kakaoTokenService;
     private final ImageDownloader imageDownloader;
     private final ApplicationEventPublisher eventPublisher;
+    private final S3Service s3Service;
 
     public String getCodeUrl() {
         return userApiCaller.createCodeUrl();
@@ -57,7 +60,7 @@ public class UserService {
 
                 // 프로필 이미지 다운로드 및 업로드
                 var event = UserEventDto.UploadImage.toDto(
-                        kakaoAccount.profile().profileImageUrl(), Constants.PROFILE_IMAGE_FOLRDER, newUser.getId());
+                        kakaoAccount.profile().profileImageUrl(), Constants.USER_IMAGE_FOLRDER, newUser.getId());
                 eventPublisher.publishEvent(event);
 
                 return newUser;
@@ -80,6 +83,15 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException(MessageConstants.PROFILE_IMAGE_ERROR_MESSAGE);
         }
+    }
+
+    @Transactional
+    public void uploadImageUrl(Long userId, MultipartFile imageFile, String type) {
+        String key = s3Service.createKey(Constants.USER_IMAGE_FOLRDER, userId, imageFile, type);
+        S3EventDto.Upload event = S3EventDto.Upload.toDto(imageFile, key);
+        eventPublisher.publishEvent(event);
+
+        updateImageUrl(userId, key);
     }
 
     @Transactional
