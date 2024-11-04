@@ -1,16 +1,12 @@
 package supernova.whokie.answer.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import supernova.whokie.alarm.event.AlarmEventDto;
 import supernova.whokie.answer.Answer;
 import supernova.whokie.answer.service.dto.AnswerCommand;
 import supernova.whokie.answer.service.dto.AnswerModel;
@@ -21,15 +17,20 @@ import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.exception.InvalidEntityException;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.service.GroupReaderService;
-import supernova.whokie.point_record.PointRecord;
 import supernova.whokie.point_record.PointRecordOption;
 import supernova.whokie.point_record.event.PointRecordEventDto;
-import supernova.whokie.point_record.sevice.PointRecordWriterService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.service.QuestionReaderService;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
 import supernova.whokie.user.service.dto.UserModel;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +41,9 @@ public class AnswerService {
     private final AnswerReaderService answerReaderService;
     private final QuestionReaderService questionReaderService;
     private final GroupReaderService groupReaderService;
-    private final PointRecordWriterService pointRecordWriterService;
     private final AnswerWriterService answerWriterService;
     private final FriendReaderService friendReaderService;
+    private final S3Service s3Service;
 
     @Transactional(readOnly = true)
     public Page<AnswerModel.Record> getAnswerRecord(Pageable pageable, Long userId,
@@ -69,12 +70,17 @@ public class AnswerService {
         Answer answer = command.toEntity(question, user, picked, Constants.DEFAULT_HINT_COUNT);
         answerWriterService.save(answer);
 
+        // Ranking Count 증가
+
         user.increasePoint(Constants.ANSWER_POINT);
+
+        AlarmEventDto.Alarm alarmEvent = AlarmEventDto.Alarm.toDto(picked.getId(), question.getContent());
+        eventPublisher.publishEvent(alarmEvent);
+
         eventPublisher.publishEvent(
             PointRecordEventDto.Earn.toDto(userId, Constants.ANSWER_POINT, 0,
                 PointRecordOption.CHARGED,
                 Constants.POINT_EARN_MESSAGE));
-
     }
 
     @Transactional
@@ -91,20 +97,17 @@ public class AnswerService {
         Answer answer = command.toEntity(question, user, picked, Constants.DEFAULT_HINT_COUNT);
         answerWriterService.save(answer);
 
+        // Ranking Count 증가
+
         user.increasePoint(Constants.ANSWER_POINT);
+
+        AlarmEventDto.Alarm alarmEvent = AlarmEventDto.Alarm.toDto(picked.getId(), question.getContent());
+        eventPublisher.publishEvent(alarmEvent);
 
         var event = PointRecordEventDto.Earn.toDto(userId, Constants.ANSWER_POINT, 0,
             PointRecordOption.CHARGED,
             Constants.POINT_EARN_MESSAGE);
-
         eventPublisher.publishEvent(event);
-    }
-
-    @Transactional
-    public void recordEarnPoint(PointRecordEventDto.Earn event) {
-        PointRecord pointRecord = PointRecord.create(event.userId(), event.point(), event.amount(),
-            event.option(), event.message());
-        pointRecordWriterService.save(pointRecord);
     }
 
     @Transactional(readOnly = true)
@@ -113,9 +116,14 @@ public class AnswerService {
 
         List<Friend> allFriends = friendReaderService.getAllByHostUser(user);
 
-        List<UserModel.PickedInfo> friendsInfoList = allFriends.stream().map(
-            friend -> UserModel.PickedInfo.from(friend.getFriendUser())
-        ).toList();
+        List<UserModel.PickedInfo> friendsInfoList = allFriends.stream()
+                .map(friend -> {
+                    String imageUrl = friend.getFriendUser().getImageUrl();
+                    if (user.isImageUrlStoredInS3()) {
+                        imageUrl = s3Service.getSignedUrl(imageUrl);
+                    }
+                    return UserModel.PickedInfo.from(friend.getFriendUser(), imageUrl);
+                }).toList();
 
         return AnswerModel.Refresh.from(friendsInfoList);
     }

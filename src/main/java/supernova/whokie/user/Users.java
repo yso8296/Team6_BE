@@ -84,11 +84,21 @@ public class Users extends BaseTimeEntity {
         }
     }
 
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isImageUrlStoredInS3() {
+        return imageUrl.equals(Constants.USER_IMAGE_FOLRDER + "/" + id + ".png");
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     private void checkUserHasNotEnoughPoint(int point) {
         if (this.point < point) {
             throw new InvalidEntityException(MessageConstants.NOT_ENOUGH_POINT_MESSAGE);
         }
     }
-
-
 }

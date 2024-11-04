@@ -1,5 +1,6 @@
 package supernova.whokie.global.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -19,12 +20,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> methodArgumentNotValidException(
-        MethodArgumentNotValidException e) {
+        MethodArgumentNotValidException e
+    ) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         Map<String, Object> errors = new HashMap<>();
         e.getAllErrors()
             .forEach(
                 field -> errors.put(((FieldError) field).getField(), field.getDefaultMessage()));
+
+        problemDetail.setTitle("Validation Error");
+        problemDetail.setProperties(errors);
+        return ResponseEntity.badRequest().body(problemDetail);
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ProblemDetail> ConstraintViolationException(
+        ConstraintViolationException e
+    ) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        Map<String, Object> errors = new HashMap<>();
+        e.getConstraintViolations()
+            .forEach(
+                violation -> errors.put(violation.getPropertyPath().toString(),
+                    violation.getMessage()));
 
         problemDetail.setTitle("Validation Error");
         problemDetail.setProperties(errors);
@@ -74,6 +93,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileTypeMismatchException.class)
     public ResponseEntity<ProblemDetail> FileTypeMismatchException(FileTypeMismatchException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
+        problemDetail.setTitle(e.getTitle());
+        problemDetail.setDetail(e.getMessage());
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(InviteCodeException.class)
+    public ResponseEntity<ProblemDetail> InviteCodeException(InviteCodeException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
         problemDetail.setTitle(e.getTitle());
         problemDetail.setDetail(e.getMessage());
