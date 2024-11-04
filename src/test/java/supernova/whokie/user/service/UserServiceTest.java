@@ -1,23 +1,24 @@
 package supernova.whokie.user.service;
 
+import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.global.entity.BaseTimeEntity;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
-import supernova.whokie.user.infrastructure.repository.UserRepository;
 import supernova.whokie.user.service.dto.UserModel;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,18 +26,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@SpringBootTest
-@TestPropertySource(properties = {
-    "jwt.secret=abcd"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
 
     @Mock
-    UserRepository userRepository;
+    UserReaderService userReaderService;
 
     private Users user;
 
@@ -49,7 +47,7 @@ class UserServiceTest {
     @DisplayName("내 포인트 조회")
     void getPoint() {
         // given
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(userReaderService.getUserById(user.getId())).willReturn(user);
 
         // when
         UserModel.Point point = userService.getPoint(user.getId());
@@ -57,7 +55,7 @@ class UserServiceTest {
         // then
         assertAll(
             () -> assertEquals(1000, point.amount()),
-            () -> then(userRepository).should().findById(user.getId())
+            () -> then(userReaderService).should().getUserById(user.getId())
         );
     }
 
@@ -69,7 +67,7 @@ class UserServiceTest {
         createdAtField.setAccessible(true);
         createdAtField.set(user, LocalDateTime.now());
 
-        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        given(userReaderService.getUserById(user.getId())).willReturn(user);
 
         // when
         UserModel.Info userInfo = userService.getUserInfo(user.getId());
@@ -81,7 +79,7 @@ class UserServiceTest {
             () -> assertThat(userInfo.age()).isEqualTo(user.getAge()),
             () -> assertThat(userInfo.gender()).isEqualTo(user.getGender()),
             () -> assertThat(userInfo.role()).isEqualTo(user.getRole()),
-            () -> then(userRepository).should().findById(user.getId())
+            () -> then(userReaderService).should().getUserById(user.getId())
         );
     }
 

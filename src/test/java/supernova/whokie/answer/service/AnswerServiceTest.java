@@ -1,150 +1,166 @@
 package supernova.whokie.answer.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import io.awspring.cloud.s3.S3Template;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.data.domain.*;
+import org.springframework.test.util.ReflectionTestUtils;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.answer.Answer;
-import supernova.whokie.answer.repository.AnswerRepository;
 import supernova.whokie.answer.service.dto.AnswerCommand;
 import supernova.whokie.answer.service.dto.AnswerModel;
 import supernova.whokie.friend.Friend;
-import supernova.whokie.friend.infrastructure.repository.FriendRepository;
+import supernova.whokie.friend.service.FriendReaderService;
 import supernova.whokie.question.Question;
-import supernova.whokie.question.repository.QuestionRepository;
 import supernova.whokie.user.Users;
-import supernova.whokie.user.infrastructure.repository.UserRepository;
+import supernova.whokie.user.service.UserReaderService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@TestPropertySource(properties = {
-    "jwt.secret=abcd"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 class AnswerServiceTest {
 
-    @MockBean
-    private AnswerRepository answerRepository;
-    @MockBean
-    private FriendRepository friendRepository;
-    @MockBean
-    private UserRepository userRepository;
-    @MockBean
-    private QuestionRepository questionRepository;
+    @Mock
+    private AnswerReaderService answerReaderService;
 
-    @Autowired
+    @Mock
+    private UserReaderService userReaderService;
+
+    @Mock
+    private FriendReaderService friendReaderService;
+
+    @InjectMocks
     private AnswerService answerService;
 
-    //@Test
-//    @DisplayName("전체 질문 기록을 가져오는 메서드 테스트")
-//    void getAnswerRecordTest() {
-//        Users dummyUser = mock(Users.class);
-//        // given
-//        Answer dummyAnswer = Answer.builder()
-//                .id(1L)
-//                .question(mock(Question.class))
-//                .picker(mock(Users.class))
-//                .picked(mock(Users.class))
-//                .hintCount(3)
-//                .build();
-//        ReflectionTestUtils.setField(dummyAnswer, "createdAt", LocalDateTime.of(2024, 9, 19, 0, 0));
-//
-//        Page<Answer> answerPage = new PageImpl<>(List.of(dummyAnswer), PageRequest.of(0, 10), 1);
-//
-//        // when
-//        when(answerRepository.findAllByPicker(any(Pageable.class), eq(dummyUser))).thenReturn(
-//                answerPage);
-//        when(userRepository.findById(anyLong())).thenReturn(Optional.of(dummyUser));
-//
-//        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").ascending());
-//
-//        PagingResponse<AnswerResponse.Record> response = answerService.getAnswerRecord(pageable,
-//                dummyUser.getId());
-//
-//        // then
-//        assertEquals(1, response.content().size());
-//        assertEquals(dummyAnswer.getId(), response.content().get(0).answerId());
-//        assertEquals(3, response.content().get(0).hintCount());
-//    }
+    private Users user;
+    private Answer answer;
+    private List<Friend> friends;
 
-    //@Test
-    @DisplayName("공통 질문 답하기 메서드의 save가 잘 작동하는지 테스트")
-    void answerToCommonQuestionSaveTest() {
-        // given
-        Long userId = 1L;
-        Long questionId = 1L;
-        Long pickedId = 2L;
-
-        Users user = mock(Users.class);
-        Question question = mock(Question.class);
-        Users picked = mock(Users.class);
-
-        AnswerCommand.CommonAnswer command = mock(AnswerCommand.CommonAnswer.class);
-        Answer answer = mock(Answer.class);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
-        when(userRepository.findById(pickedId)).thenReturn(Optional.of(picked));
-
-        when(command.questionId()).thenReturn(questionId);
-        when(command.pickedId()).thenReturn(pickedId);
-
-        when(command.toEntity(eq(question), eq(user), eq(picked), anyInt())).thenReturn(answer);
-
-        // when
-        answerService.answerToCommonQuestion(userId, command);
-
-        // then
-        verify(answerRepository, times(1)).save(answer);
+    @BeforeEach
+    void setUp() {
+        user = createUser();
+        answer = createAnswer();
+        friends = createFriends();
     }
 
-    //@Test
+    @Test
+    @DisplayName("전체 질문 기록을 가져오는 메서드 테스트")
+    void getAnswerRecordTest() {
+        // given
+        Users dummyUser = user;
+        Answer dummyAnswer = answer;
+
+        ReflectionTestUtils.setField(dummyAnswer, "createdAt", LocalDateTime.of(2024, 9, 19, 0, 0));
+
+        Page<Answer> answerPage = new PageImpl<>(List.of(dummyAnswer), PageRequest.of(0, 10), 1);
+
+        // when
+        when(userReaderService.getUserById(anyLong())).thenReturn(dummyUser);
+        when(answerReaderService.getAnswerList(any(Pageable.class), eq(dummyUser), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(answerPage);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").ascending());
+        LocalDate testDate = LocalDate.of(2024, 9, 1);
+
+        Page<AnswerModel.Record> response = answerService.getAnswerRecord(pageable, dummyUser.getId(), testDate);
+
+        // then
+        assertEquals(1, response.getContent().size());
+        assertEquals(dummyAnswer.getId(), response.getContent().get(0).answerId());
+        assertEquals(3, response.getContent().get(0).hintCount());
+    }
+
+    @Test
     @DisplayName("답변 새로고침 기능이 잘 동작하는지 확인하는 테스트")
     void refreshAnswerListTest() {
-        //given
-        Users dummyUser = Users.builder().id(1L).build();
+        // given
+        Users dummyUser = user;
+        List<Friend> dummyFriends = friends;
 
-        List<Friend> dummyFriends = List.of(
-            Friend.builder()
-                .hostUser(dummyUser)
-                .friendUser(Users.builder().id(2L).name("Friend 1").imageUrl("url1").build())
-                .build(),
-            Friend.builder()
-                .hostUser(dummyUser)
-                .friendUser(Users.builder().id(3L).name("Friend 2").imageUrl("url2").build())
-                .build(),
-            Friend.builder()
-                .hostUser(dummyUser)
-                .friendUser(Users.builder().id(4L).name("Friend 3").imageUrl("url3").build())
-                .build(),
-            Friend.builder()
-                .hostUser(dummyUser)
-                .friendUser(Users.builder().id(5L).name("Friend 4").imageUrl("url4").build())
-                .build(),
-            Friend.builder()
-                .hostUser(dummyUser)
-                .friendUser(Users.builder().id(6L).name("Friend 5").imageUrl("url5").build())
-                .build()
-        );
+        when(userReaderService.getUserById(anyLong())).thenReturn(dummyUser);
+        when(friendReaderService.getAllByHostUser(any(Users.class))).thenReturn(dummyFriends);
 
-        //when
-        when(friendRepository.findAllByHostUser(any(Users.class))).thenReturn(dummyFriends);
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(dummyUser));
+        // when
+        AnswerModel.Refresh refreshResponse = answerService.refreshAnswerList(dummyUser.getId());
 
-        AnswerModel.Refresh refreshResponse = answerService.refreshAnswerList(
-            dummyUser.getId());
-
-        //then
+        // then
         assertEquals(5, refreshResponse.users().size());
+        verify(friendReaderService, times(1)).getAllByHostUser(any(Users.class));
+    }
 
-        verify(friendRepository, times(1)).findAllByHostUser(any(Users.class));
+    @Test
+    @DisplayName("purchaseHint 메서드가 올바르게 작동하는지 테스트")
+    void purchaseHintTest() {
+        // given
+        Users dummyUser = user;
+        Answer dummyAnswer = mock(Answer.class);
+        Long userId = dummyUser.getId();
+        Long answerId = dummyAnswer.getId();
+
+        AnswerCommand.Purchase command = mock(AnswerCommand.Purchase.class);
+        when(command.answerId()).thenReturn(answerId);
+        when(userReaderService.getUserById(userId)).thenReturn(dummyUser);
+        when(answerReaderService.getAnswerById(answerId)).thenReturn(dummyAnswer);
+        when(dummyAnswer.isNotPicked(dummyUser)).thenReturn(false);
+
+        // when
+        answerService.purchaseHint(userId, command);
+
+        // then
+        verify(dummyUser, times(1)).decreasePointsByHintCount(dummyAnswer);
+        verify(dummyAnswer, times(1)).increaseHintCount();
+    }
+
+    private Users createUser() {
+        return mock(Users.class);
+    }
+
+    private Answer createAnswer() {
+        return Answer.builder()
+                .id(1L)
+                .question(mock(Question.class))
+                .picker(user)
+                .picked(user)
+                .hintCount(3)
+                .build();
+    }
+
+    private List<Friend> createFriends() {
+        return  List.of(
+                Friend.builder()
+                        .hostUser(user)
+                        .friendUser(Users.builder().id(2L).name("Friend 1").imageUrl("url1").build())
+                        .build(),
+                Friend.builder()
+                        .hostUser(user)
+                        .friendUser(Users.builder().id(3L).name("Friend 2").imageUrl("url2").build())
+                        .build(),
+                Friend.builder()
+                        .hostUser(user)
+                        .friendUser(Users.builder().id(4L).name("Friend 3").imageUrl("url3").build())
+                        .build(),
+                Friend.builder()
+                        .hostUser(user)
+                        .friendUser(Users.builder().id(5L).name("Friend 4").imageUrl("url4").build())
+                        .build(),
+                Friend.builder()
+                        .hostUser(user)
+                        .friendUser(Users.builder().id(6L).name("Friend 5").imageUrl("url5").build())
+                        .build()
+        );
     }
 }

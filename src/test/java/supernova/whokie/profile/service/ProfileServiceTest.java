@@ -1,13 +1,16 @@
 package supernova.whokie.profile.service;
 
+import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.profile.Profile;
 import supernova.whokie.profile.service.dto.ProfileModel;
 import supernova.whokie.redis.entity.RedisVisitCount;
@@ -21,11 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@SpringBootTest
-@TestPropertySource(properties = {
-    "jwt.secret=abcd"
-})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 public class ProfileServiceTest {
 
     @Mock
