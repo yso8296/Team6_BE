@@ -70,6 +70,8 @@ public class AnswerService {
         Answer answer = command.toEntity(question, user, picked, Constants.DEFAULT_HINT_COUNT);
         answerWriterService.save(answer);
 
+        // Ranking Count 증가
+
         user.increasePoint(Constants.ANSWER_POINT);
 
         AlarmEventDto.Alarm alarmEvent = AlarmEventDto.Alarm.toDto(picked.getId(), question.getContent());
@@ -79,7 +81,6 @@ public class AnswerService {
             PointRecordEventDto.Earn.toDto(userId, Constants.ANSWER_POINT, 0,
                 PointRecordOption.CHARGED,
                 Constants.POINT_EARN_MESSAGE));
-
     }
 
     @Transactional
@@ -95,6 +96,8 @@ public class AnswerService {
 
         Answer answer = command.toEntity(question, user, picked, Constants.DEFAULT_HINT_COUNT);
         answerWriterService.save(answer);
+
+        // Ranking Count 증가
 
         user.increasePoint(Constants.ANSWER_POINT);
 
