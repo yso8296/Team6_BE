@@ -25,6 +25,10 @@ public final class Constants {
     public static final int PROFILE_BG_IMAGE_HEIGHT = 144;
     public static final Long COMMON_GROUPS_ID = 1L;
 
+    public static final char[] CHO_SUNG = {
+            'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+    };
+
     private Constants() {
     }
 }
