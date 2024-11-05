@@ -54,6 +54,7 @@ public class AnswerService {
         if(date == null){
             date = LocalDate.now();
         }
+
         Users user = userReaderService.getUserById(userId);
 
         LocalDateTime startDate = date.atStartOfDay();
