@@ -64,8 +64,7 @@ jobs:
           port: 22
           script: |
             # Remove all existing containers
-            sudo docker rm -f $(docker ps -a -q --filter "name=whokie-prod")
-            sudo docker rm -f $(docker ps -a -q --filter "name=whokie-dev")
+            sudo docker rm -f $(docker ps -a -q)
             sudo docker image prune -f
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKER_REPO }}
