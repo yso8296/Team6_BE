@@ -10,6 +10,7 @@ public class GroupResponse {
         Long groupId,
         String groupName,
         String groupImageUrl,
+        String groupDescription,
         Long groupMemberCount
     ) {
 
@@ -18,6 +19,7 @@ public class GroupResponse {
                 .groupId(groupModel.groupId())
                 .groupName(groupModel.groupName())
                 .groupImageUrl(groupModel.groupImageUrl())
+                .groupDescription(groupModel.groupDescription())
                 .groupMemberCount(groupModel.groupMemberCount())
                 .build();
         }
