@@ -50,16 +50,12 @@ public class RankingResponse {
 
     @Builder
     public record GroupRank(
-            Long rankingId,
-            String question,
             int rank,
             int count,
             String memberName
     ) {
         public static RankingResponse.GroupRank from(RankingModel.GroupRank model) {
             return RankingResponse.GroupRank.builder()
-                    .rankingId(model.rankingId())
-                    .question(model.question())
                     .rank(model.rank())
                     .count(model.count())
                     .memberName(model.memberName())

@@ -60,14 +60,14 @@ class RankingRepositoryTest {
 
     @Test
     @DisplayName("groupId로 랭킹 조회")
-    void findTop3ByGroups_IdOrderByCountDescTest() {
+    void findAllByGroupIdFetchJoinUsersTest() {
         // given
         Groups group = groups.get(0);
         List<Ranking> rankings1 = rankings.stream()
             .filter(ranking -> ranking.getGroups() == group)
             .toList();
         // when
-        List<Ranking> actual = rankingRepository.findTop3ByGroups_IdOrderByCountDesc(group.getId());
+        List<Ranking> actual = rankingRepository.findAllByGroupIdFetchJoinUsers(group.getId());
 
         // then
         assertAll(
