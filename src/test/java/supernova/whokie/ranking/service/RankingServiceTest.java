@@ -50,8 +50,9 @@ class RankingServiceTest {
         Ranking ranking1 = rankings.get(0);
         Ranking ranking2 = rankings.get(1);
         Ranking ranking3 = rankings.get(2);
+        List<Ranking> rankingList = List.of(ranking1, ranking2, ranking3);
         given(rankingReaderService.getTop3RankingByUserId(user.getId()))
-                .willReturn(rankings);
+                .willReturn(rankingList);
 
         // when
         List<RankingModel.Rank> actual = rankingService.getUserRanking(user.getId());
