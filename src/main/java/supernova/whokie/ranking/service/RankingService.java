@@ -34,7 +34,7 @@ public class RankingService {
         if (!groupMemberReaderService.isGroupMemberExist(userId, groupId)) {
             throw new EntityNotFoundException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
         }
-
+     
         List<Ranking> rankings = rankingReaderService.getTop3RankingByGroupId(groupId);
         List<Map.Entry<String, Integer>> entries = getTop3UsersFromGroup(rankings);
 

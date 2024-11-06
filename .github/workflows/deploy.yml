@@ -68,14 +68,12 @@ jobs:
           port: 22
           script: |
             # Remove all existing containers
-            sudo docker rm -f $(docker ps -a -q --filter "name=whokie-prod")
-            sudo docker rm -f $(docker ps -a -q --filter "name=whokie-dev")
+            sudo docker rm -f $(docker ps -a -q)
             sudo docker image prune -f
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             # Run the new container with environment variables
-            sudo docker run -d -p 8080:8080 -e \
-            --name whokie-prod \
+            sudo docker run -d -p 8080:8080 \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
             -e REDIRECT_URI=${{ secrets.REDIRECT_URI }} \
@@ -94,12 +92,11 @@ jobs:
             -e KAKAO_PAY_CANCEL_REDIRECT_URL=${{ secrets.KAKAO_PAY_CANCEL_REDIRECT_URL }} \
             ${{ secrets.DOCKER_REPO }}
             
-            sudo docker run -d -p 8081:8080 -e \
-            --name whokie-prod \
+            sudo docker run -d -p 8081:8080 \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
             -e REDIRECT_URI=${{ secrets.REDIRECT_URI_PROD }} \
-            -e DB_URL=${{ secrets.DB_URL }} \
+            -e DB_URL=${{ secrets.DB_URL_PROD }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
