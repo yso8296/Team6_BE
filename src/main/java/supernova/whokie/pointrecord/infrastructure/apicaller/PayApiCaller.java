@@ -36,6 +36,9 @@ public class PayApiCaller {
                     .header("Authorization", "SECRET_KEY "+ kakaoPayProperties.secretKey())
                     .body(jsonBody)
                     .exchange((request, response) -> {
+                        if (response.getStatusCode().is4xxClientError()) {
+                            System.out.println(objectMapper.readValue(response.getBody(), Map.class));
+                        }
                         if (response.getStatusCode().isSameCodeAs(HttpStatus.OK)) {
                             return objectMapper.readValue(response.getBody(), PayReadyInfoResponse.class);
                         }
