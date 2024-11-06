@@ -69,18 +69,20 @@ public class Users extends BaseTimeEntity {
 
     public void decreasePointsByHintCount(Answer answer) {
         switch (answer.getHintCount()) {
-            case 1:
+            case 0:
                 checkUserHasNotEnoughPoint(UserConstants.FIRST_HINT_PURCHASE_POINT);
                 decreasePoint(UserConstants.FIRST_HINT_PURCHASE_POINT);
                 break;
-            case 2:
+            case 1:
                 checkUserHasNotEnoughPoint(UserConstants.SECOND_HINT_PURCHASE_POINT);
                 decreasePoint(UserConstants.SECOND_HINT_PURCHASE_POINT);
                 break;
-            case 3:
+            case 2:
                 checkUserHasNotEnoughPoint(UserConstants.THIRD_HINT_PURCHASE_POINT);
                 decreasePoint(UserConstants.THIRD_HINT_PURCHASE_POINT);
                 break;
+            default:
+                throw new InvalidEntityException(MessageConstants.ALL_HINT_USED_MESSAGE);
         }
     }
 
