@@ -142,18 +142,18 @@ public class GroupMemberIntegrationTest {
                 .requestAttr("userId", String.valueOf(user1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.members").isArray())
-            .andExpect(jsonPath("$.members[0].groupMemberId").value(leader.getId()))
-            .andExpect(jsonPath("$.members[0].userId").value(user1.getId()))
-            .andExpect(jsonPath("$.members[0].role").value(leader.getGroupRole().toString()))
-            .andExpect(jsonPath("$.members[0].userName").value(user1.getName()))
-            .andExpect(jsonPath("$.members[0].joinedAt").value(
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content[0].groupMemberId").value(leader.getId()))
+            .andExpect(jsonPath("$.content[0].userId").value(user1.getId()))
+            .andExpect(jsonPath("$.content[0].role").value(leader.getGroupRole().toString()))
+            .andExpect(jsonPath("$.content[0].userName").value(user1.getName()))
+            .andExpect(jsonPath("$.content[0].joinedAt").value(
                 leader.getCreatedAt().toLocalDate().toString()))
-            .andExpect(jsonPath("$.members[1].groupMemberId").value(member.getId()))
-            .andExpect(jsonPath("$.members[1].userId").value(user2.getId()))
-            .andExpect(jsonPath("$.members[1].role").value(member.getGroupRole().toString()))
-            .andExpect(jsonPath("$.members[1].userName").value(user2.getName()))
-            .andExpect(jsonPath("$.members[1].joinedAt").value(
+            .andExpect(jsonPath("$.content[1].groupMemberId").value(member.getId()))
+            .andExpect(jsonPath("$.content[1].userId").value(user2.getId()))
+            .andExpect(jsonPath("$.content[1].role").value(member.getGroupRole().toString()))
+            .andExpect(jsonPath("$.content[1].userName").value(user2.getName()))
+            .andExpect(jsonPath("$.content[1].joinedAt").value(
                 member.getCreatedAt().toLocalDate().toString()))
             .andExpect(status().isOk())
             .andDo(print());

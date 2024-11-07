@@ -1,19 +1,19 @@
 package supernova.whokie.groupmember.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.global.exception.ForbiddenException;
-import supernova.whokie.groupmember.service.dto.GroupMemberModel;
-import supernova.whokie.groupmember.util.CodeData;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.service.GroupReaderService;
 import supernova.whokie.groupmember.GroupMember;
 import supernova.whokie.groupmember.service.dto.GroupMemberCommand;
-import supernova.whokie.groupmember.service.dto.GroupMemberModel.Members;
+import supernova.whokie.groupmember.service.dto.GroupMemberModel;
+import supernova.whokie.groupmember.util.CodeData;
 import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
@@ -72,18 +72,15 @@ public class GroupMemberService {
 
 
     @Transactional(readOnly = true)
-    public Members getGroupMembers(Long userId, Long groupId) {
-        List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(userId, groupId);
-        List<GroupMemberModel.Member> entities = groupMembers.stream()
-                .map(entity -> {
+    public Page<GroupMemberModel.Member> getGroupMembers(Pageable pageable, Long userId, Long groupId) {
+        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(pageable, userId, groupId);
+        return groupMembers.map(entity -> {
                     String imageUrl = entity.getUser().getImageUrl();
                     if (entity.getUser().isImageUrlStoredInS3()) {
                         imageUrl = s3Service.getSignedUrl(imageUrl);
                     }
                     return GroupMemberModel.Member.from(entity, imageUrl);
-                }).toList();
-
-        return Members.from(entities);
+                });
     }
 
     @Transactional

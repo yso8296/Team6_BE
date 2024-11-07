@@ -5,25 +5,8 @@ import supernova.whokie.groupmember.GroupRole;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class GroupMemberResponse {
-
-    @Builder
-    public record Members(
-            List<Member> members
-    ) {
-
-        public static GroupMemberResponse.Members from(GroupMemberModel.Members model) {
-            return Members.builder()
-                    .members(
-                            model.members().stream()
-                                    .map(GroupMemberResponse.Member::from)
-                                    .toList()
-                    )
-                    .build();
-        }
-    }
 
     @Builder
     public record Member(
