@@ -67,8 +67,8 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            # Remove all existing containers
-            sudo docker rm -f $(docker ps -a -q)
+            # 8081 포트를 사용하는 컨테이너만 중단하고 제거
+            sudo docker ps --filter "publish=8081" -q | xargs -r sudo docker rm -f
             sudo docker image prune -f
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKER_REPO }}
