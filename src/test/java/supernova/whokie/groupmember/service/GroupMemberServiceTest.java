@@ -14,6 +14,7 @@ import supernova.whokie.groupmember.GroupRole;
 import supernova.whokie.groupmember.GroupStatus;
 import supernova.whokie.groupmember.service.dto.GroupMemberCommand;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -38,6 +40,9 @@ public class GroupMemberServiceTest {
 
     @Mock
     private GroupMemberReaderService groupMemberReaderService;
+
+    @Mock
+    private S3Service s3Service;
 
     private GroupMember leader;
     private GroupMember member;
@@ -117,6 +122,8 @@ public class GroupMemberServiceTest {
 
         given(groupMemberReaderService.getGroupMembers(userId, groupId))
             .willReturn(List.of(leader, member));
+        given(s3Service.getSignedUrl(any()))
+                .willReturn("signedUrl");
 
         // when
         GroupMemberModel.Members members = groupMemberService.getGroupMembers(userId,
