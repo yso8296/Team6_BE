@@ -68,7 +68,7 @@ jobs:
           port: 22
           script: |
             # Remove all existing containers
-            sudo docker rm -f $(docker ps -a -q)
+            sudo docker ps --filter "publish=8080" -q | xargs -r sudo docker rm -f
             sudo docker image prune -f
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKER_REPO }}
@@ -92,22 +92,4 @@ jobs:
             -e KAKAO_PAY_CANCEL_REDIRECT_URL=${{ secrets.KAKAO_PAY_CANCEL_REDIRECT_URL }} \
             ${{ secrets.DOCKER_REPO }}
             
-            sudo docker run -d -p 8081:8080 \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
-            -e REDIRECT_URI=${{ secrets.REDIRECT_URI_PROD }} \
-            -e DB_URL=${{ secrets.DB_URL_PROD }} \
-            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
-            -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
-            -e AWS_YOUR_REGION=${{ secrets.AWS_YOUR_REGION }} \
-            -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-            -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
-            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
-            -e KAKAO_PAY_SECRET_KEY=${{ secrets.KAKAO_PAY_SECRET_KEY }} \
-            -e KAKAO_PAY_APPROVE_REDIRECT_URL=${{ secrets.KAKAO_PAY_APPROVE_REDIRECT_URL }} \
-            -e KAKAO_PAY_FAIL_REDIRECT_URL=${{ secrets.KAKAO_PAY_FAIL_REDIRECT_URL }} \
-            -e KAKAO_PAY_CANCEL_REDIRECT_URL=${{ secrets.KAKAO_PAY_CANCEL_REDIRECT_URL }} \
-            ${{ secrets.DOCKER_REPO }}
             
