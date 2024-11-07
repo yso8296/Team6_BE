@@ -14,15 +14,17 @@ public class GroupMemberModel {
             Long groupMemberId,
             Long userId,
             String userName,
+            String memberImageUrl,
             LocalDate joinedAt,
             GroupRole role
     ) {
 
-        public static Member from(GroupMember groupMember) {
+        public static Member from(GroupMember groupMember, String imageUrl) {
             return Member.builder()
                     .groupMemberId(groupMember.getId())
                     .userId(groupMember.getUser().getId())
                     .userName(groupMember.getUser().getName())
+                    .memberImageUrl(imageUrl)
                     .joinedAt(groupMember.getCreatedAt().toLocalDate())
                     .role(groupMember.getGroupRole())
                     .build();
@@ -34,13 +36,9 @@ public class GroupMemberModel {
             List<Member> members
     ) {
 
-        public static Members from(List<GroupMember> memberList) {
+        public static Members from(List<Member> members) {
             return Members.builder()
-                    .members(
-                            memberList.stream()
-                                    .map(Member::from)
-                                    .toList()
-                    )
+                    .members(members)
                     .build();
         }
     }

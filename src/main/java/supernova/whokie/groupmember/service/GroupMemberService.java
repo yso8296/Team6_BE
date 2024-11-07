@@ -7,12 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.global.exception.ForbiddenException;
+import supernova.whokie.groupmember.service.dto.GroupMemberModel;
 import supernova.whokie.groupmember.util.CodeData;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.service.GroupReaderService;
 import supernova.whokie.groupmember.GroupMember;
 import supernova.whokie.groupmember.service.dto.GroupMemberCommand;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel.Members;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
 
@@ -24,6 +26,7 @@ public class GroupMemberService {
     private final GroupMemberReaderService groupMemberReaderService;
     private final UserReaderService userReaderService;
     private final GroupReaderService groupReaderService;
+    private final S3Service s3Service;
 
     @Transactional
     public void delegateLeader(Long userId, GroupMemberCommand.Modify command) {
@@ -71,7 +74,13 @@ public class GroupMemberService {
     @Transactional(readOnly = true)
     public Members getGroupMembers(Long userId, Long groupId) {
         List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(userId, groupId);
-        return Members.from(groupMembers);
+        List<GroupMemberModel.Member> entities = groupMembers.stream()
+                .map(entity -> {
+                    String imageUrl = s3Service.getSignedUrl(entity.getUser().getImageUrl());
+                    return GroupMemberModel.Member.from(entity, imageUrl);
+                }).toList();
+
+        return Members.from(entities);
     }
 
     @Transactional
