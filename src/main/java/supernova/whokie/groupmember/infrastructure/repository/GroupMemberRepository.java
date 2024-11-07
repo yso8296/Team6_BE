@@ -15,6 +15,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     void deleteByUserIdAndGroupId(Long userId, Long groupId);
 
+    @Query("SELECT g FROM GroupMember g JOIN FETCH g.user WHERE g.group.id = :groupId")
     List<GroupMember> findAllByGroupId(Long groupId);
 
     @Query("SELECT g FROM GroupMember g WHERE g.user.id != :userId AND g.group.id = :groupId ORDER BY function('RAND')")

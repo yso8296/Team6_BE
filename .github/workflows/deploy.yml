@@ -68,7 +68,7 @@ jobs:
           port: 22
           script: |
             # Remove all existing containers
-            sudo docker rm -f $(docker ps -a -q)
+            sudo docker ps --filter "publish=8080" -q | xargs -r sudo docker rm -f
             sudo docker image prune -f
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKER_REPO }}

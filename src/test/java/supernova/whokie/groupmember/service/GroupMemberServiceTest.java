@@ -144,6 +144,7 @@ public class GroupMemberServiceTest {
             .point(1500)
             .age(22)
             .kakaoId(1L)
+            .imageUrl("signedUrl")
             .gender(Gender.M)
             .role(Role.USER)
             .build();

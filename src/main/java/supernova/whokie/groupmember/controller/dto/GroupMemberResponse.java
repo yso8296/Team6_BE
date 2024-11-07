@@ -31,6 +31,7 @@ public class GroupMemberResponse {
             Long userId,
             GroupRole role,
             String userName,
+            String memberImageUrl,
             LocalDate joinedAt
     ) {
 
@@ -40,6 +41,7 @@ public class GroupMemberResponse {
                     .userId(model.userId())
                     .role(model.role())
                     .userName(model.userName())
+                    .memberImageUrl(model.memberImageUrl())
                     .joinedAt(model.joinedAt())
                     .build();
         }
