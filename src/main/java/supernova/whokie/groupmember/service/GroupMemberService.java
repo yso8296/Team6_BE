@@ -76,7 +76,10 @@ public class GroupMemberService {
         List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(userId, groupId);
         List<GroupMemberModel.Member> entities = groupMembers.stream()
                 .map(entity -> {
-                    String imageUrl = s3Service.getSignedUrl(entity.getUser().getImageUrl());
+                    String imageUrl = entity.getUser().getImageUrl();
+                    if (entity.getUser().isImageUrlStoredInS3()) {
+                        imageUrl = s3Service.getSignedUrl(imageUrl);
+                    }
                     return GroupMemberModel.Member.from(entity, imageUrl);
                 }).toList();
 
