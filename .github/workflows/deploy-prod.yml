@@ -24,7 +24,7 @@ jobs:
       AWS_YOUR_REGION: ${{ secrets.AWS_YOUR_REGION }}
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_PROD_NAME }}
       KAKAO_PAY_SECRET_KEY: ${{ secrets.KAKAO_PAY_SECRET_KEY }}
       KAKAO_PAY_APPROVE_REDIRECT_URL: ${{ secrets.KAKAO_PAY_APPROVE_REDIRECT_URL }}
       KAKAO_PAY_FAIL_REDIRECT_URL: ${{ secrets.KAKAO_PAY_FAIL_REDIRECT_URL }}
@@ -86,7 +86,7 @@ jobs:
             -e AWS_YOUR_REGION=${{ secrets.AWS_YOUR_REGION }} \
             -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
             -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
-            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
+            -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_PROD_NAME }} \
             -e KAKAO_PAY_SECRET_KEY=${{ secrets.KAKAO_PAY_SECRET_KEY }} \
             -e KAKAO_PAY_APPROVE_REDIRECT_URL=${{ secrets.KAKAO_PAY_APPROVE_REDIRECT_URL }} \
             -e KAKAO_PAY_FAIL_REDIRECT_URL=${{ secrets.KAKAO_PAY_FAIL_REDIRECT_URL }} \
