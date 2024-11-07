@@ -31,14 +31,14 @@ public class RankingModel {
     public record GroupRank(
         int rank,
         int count,
-        Long memberId
+        Long userId
     ) {
 
         public static RankingModel.GroupRank from(Map.Entry<Long, Integer> entry, int rank) {
             return RankingModel.GroupRank.builder()
                 .rank(rank)
                 .count(entry.getValue())
-                .memberId(entry.getKey())
+                .userId(entry.getKey())
                 .build();
         }
     }

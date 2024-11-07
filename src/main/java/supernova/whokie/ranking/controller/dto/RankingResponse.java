@@ -54,14 +54,14 @@ public class RankingResponse {
     public record GroupRank(
         int rank,
         int count,
-        Long memberId
+        Long userId
     ) {
 
         public static RankingResponse.GroupRank from(RankingModel.GroupRank model) {
             return RankingResponse.GroupRank.builder()
                 .rank(model.rank())
                 .count(model.count())
-                .memberId(model.memberId())
+                .userId(model.userId())
                 .build();
         }
     }
