@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import supernova.whokie.friend.service.FriendReaderService;
 import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.groupmember.GroupMember;
@@ -16,8 +15,6 @@ import supernova.whokie.question.QuestionStatus;
 import supernova.whokie.question.constants.QuestionConstants;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
-import supernova.whokie.s3.service.S3Service;
-import supernova.whokie.user.service.UserReaderService;
 
 import java.util.List;
 
@@ -27,10 +24,7 @@ public class QuestionService {
 
     private final GroupMemberReaderService groupMemberReaderService;
     private final QuestionReaderService questionReaderService;
-    private final FriendReaderService friendReaderService;
-    private final UserReaderService userReaderService;
     private final QuestionWriterService questionWriterService;
-    private final S3Service s3Service;
 
     @Transactional(readOnly = true)
     public List<QuestionModel.CommonQuestion> getCommonQuestion(Pageable pageable) {
