@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +37,7 @@ class RankingReaderServiceTest {
         rankings = createRankings();
     }
 
-    //@Test
+    @Test
     @DisplayName("그룹 내에서 count가 높은 3명 뽑기 테스트")
     void getTop3UsersFromGroupTest() {
         // given
@@ -56,9 +57,9 @@ class RankingReaderServiceTest {
         // then
         assertAll(
             () -> assertThat(actuals.entries()).hasSize(2),
-            () -> assertThat(actuals.entries().get(0).getKey()).isEqualTo(users.get(0).getName()),
+            () -> assertThat(actuals.entries().get(0).getKey()).isEqualTo(users.get(0).getId()),
             () -> assertThat(actuals.entries().get(0).getValue()).isEqualTo(finalCount),
-            () -> assertThat(actuals.entries().get(1).getKey()).isEqualTo(users.get(1).getName()),
+            () -> assertThat(actuals.entries().get(1).getKey()).isEqualTo(users.get(1).getId()),
             () -> assertThat(actuals.entries().get(1).getValue()).isEqualTo(finalCount1)
         );
     }
