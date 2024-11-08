@@ -17,6 +17,7 @@ public class GroupReaderService {
 
     private final GroupRepository groupRepository;
 
+    @Transactional(readOnly = true)
     public Groups getGroupById(Long groupId) {
         return groupRepository.findById(groupId).orElseThrow(() -> new EntityNotFoundException(
             MessageConstants.GROUP_NOT_FOUND_MESSAGE));
@@ -35,4 +36,8 @@ public class GroupReaderService {
                 () -> new EntityNotFoundException(MessageConstants.GROUP_NOT_FOUND_MESSAGE));
     }
 
+    @Transactional(readOnly = true)
+    public boolean isGroupExist(Long groupId) {
+        return groupRepository.existsById(groupId);
+    }
 }

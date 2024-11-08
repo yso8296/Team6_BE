@@ -1,9 +1,7 @@
 package supernova.whokie.global.exception;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +10,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> methodArgumentNotValidException(
-        MethodArgumentNotValidException e) {
+        MethodArgumentNotValidException e
+    ) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         Map<String, Object> errors = new HashMap<>();
         e.getAllErrors()
@@ -31,19 +32,32 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(problemDetail);
     }
 
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ProblemDetail> constraintViolationException(
+        ConstraintViolationException e
+    ) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        Map<String, Object> errors = new HashMap<>();
+        e.getConstraintViolations()
+            .forEach(
+                violation -> errors.put(violation.getPropertyPath().toString(),
+                    violation.getMessage()));
+
+        problemDetail.setTitle("Validation Error");
+        problemDetail.setProperties(errors);
+        return ResponseEntity.badRequest().body(problemDetail);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ProblemDetail> entityNotFoundException(EntityNotFoundException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
-        problemDetail.setTitle(e.getTitle());
-        problemDetail.setDetail(e.getMessage());
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ProblemDetail> authenticationException(AuthenticationException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
-        problemDetail.setTitle(e.getTitle());
-        problemDetail.setDetail(e.getMessage());
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
@@ -58,25 +72,32 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ProblemDetail> forbiddenException(ForbiddenException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
-        problemDetail.setTitle(e.getTitle());
-        problemDetail.setDetail(e.getMessage());
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
     @ExceptionHandler(InvalidEntityException.class)
-    public ResponseEntity<ProblemDetail> InvalidEntityException(InvalidEntityException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
-        problemDetail.setTitle(e.getTitle());
-        problemDetail.setDetail(e.getMessage());
+    public ResponseEntity<ProblemDetail> invalidEntityException(InvalidEntityException e) {
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
     @ExceptionHandler(FileTypeMismatchException.class)
-    public ResponseEntity<ProblemDetail> FileTypeMismatchException(FileTypeMismatchException e) {
+    public ResponseEntity<ProblemDetail> fileTypeMismatchException(FileTypeMismatchException e) {
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(InviteCodeException.class)
+    public ResponseEntity<ProblemDetail> inviteCodeException(InviteCodeException e) {
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+    }
+
+    private ProblemDetail setCustomProblemDetail(CustomException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
         problemDetail.setTitle(e.getTitle());
         problemDetail.setDetail(e.getMessage());
-        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+        return problemDetail;
     }
 }

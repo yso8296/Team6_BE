@@ -1,6 +1,5 @@
 package supernova.whokie.question.service;
 
-import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,20 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.friend.Friend;
 import supernova.whokie.friend.service.FriendReaderService;
-import supernova.whokie.global.constants.Constants;
-import supernova.whokie.group_member.GroupMember;
-import supernova.whokie.group_member.GroupRole;
-import supernova.whokie.group_member.GroupStatus;
-import supernova.whokie.group_member.service.GroupMemberReaderService;
+import supernova.whokie.groupmember.GroupMember;
+import supernova.whokie.groupmember.GroupRole;
+import supernova.whokie.groupmember.GroupStatus;
+import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
+import supernova.whokie.question.constants.QuestionConstants;
 import supernova.whokie.question.controller.dto.QuestionResponse;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
@@ -39,7 +35,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 class QuestionServiceTest {
 
     @InjectMocks
@@ -85,8 +80,8 @@ class QuestionServiceTest {
     void getCommonQuestionTest() {
         // given
         Long userId = 1L;
-        Pageable pageable = PageRequest.of(0, Constants.QUESTION_LIMIT);
-        Pageable friendPageable = PageRequest.of(0, Constants.FRIEND_LIMIT);
+        Pageable pageable = PageRequest.of(0, QuestionConstants.QUESTION_LIMIT);
+        Pageable friendPageable = PageRequest.of(0, QuestionConstants.FRIEND_LIMIT);
 
         // when
         when(userReaderService.getUserById(eq(userId))).thenReturn(user);
@@ -118,7 +113,6 @@ class QuestionServiceTest {
         when(groupMemberReaderService.getRandomGroupMembersByGroupId(eq(userId), eq(groupId), any(Pageable.class)))
                 .thenReturn(groupMembers);
 
-        Pageable pageable = PageRequest.of(0, Constants.QUESTION_LIMIT);
         List<QuestionModel.GroupQuestion> groupQuestionList = questionService.getGroupQuestions(
                 userId, groupId);
         QuestionResponse.GroupQuestions groupQuestions = QuestionResponse.GroupQuestions.from(
@@ -179,6 +173,7 @@ class QuestionServiceTest {
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)
+            .imageUrl("url")
             .build();
     }
 
@@ -215,6 +210,7 @@ class QuestionServiceTest {
                 .id((long) i)
                 .user(Users.builder()
                     .id((long) i)
+                    .imageUrl("url" + i)
                     .build())
                 .build());
         }

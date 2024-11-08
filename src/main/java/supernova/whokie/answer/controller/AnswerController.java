@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import supernova.whokie.answer.controller.dto.AnswerRequest;
 import supernova.whokie.answer.controller.dto.AnswerResponse;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/answer")
 @RequiredArgsConstructor
+@Validated
 public class AnswerController {
 
     private final AnswerService answerService;
@@ -56,7 +58,7 @@ public class AnswerController {
     @GetMapping("/record")
     public PagingResponse<AnswerResponse.Record> getAnswerRecord(
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
-        @RequestParam(name = "date", defaultValue = "1900-01-01") LocalDate date,
+        @RequestParam(name = "date", required = false) LocalDate date,
         @Authenticate Long userId
     ) {
 
@@ -64,6 +66,16 @@ public class AnswerController {
             date);
         Page<AnswerResponse.Record> response = page.map(AnswerResponse.Record::from);
         return PagingResponse.from(response);
+    }
+    @GetMapping("/record/days")
+    public AnswerResponse.RecordDays getAnswerRecordDays(
+            @RequestParam(name = "date", defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate date,
+            @Authenticate Long userId
+    ){
+        AnswerModel.RecordDays answerRecordDays = answerService.getAnswerRecordDays(userId, date);
+
+        return AnswerResponse.RecordDays.from(answerRecordDays);
+
     }
 
     @GetMapping("/hint/{answer-id}")
