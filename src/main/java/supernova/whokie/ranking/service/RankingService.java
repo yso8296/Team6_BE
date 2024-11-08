@@ -38,24 +38,10 @@ public class RankingService {
         List<Ranking> rankings = rankingReaderService.getTop3RankingByGroupId(groupId);
         List<Map.Entry<String, Integer>> entries = getTop3UsersFromGroup(rankings);
 
-        return IntStream.range(0, entries.size())
-                .mapToObj(i -> RankingModel.GroupRank.from(entries.get(i), i + 1))
-                .toList();
-    }
+        RankingModel.Top3RankingEntries mapEntries = rankingReaderService.getTop3UsersFromGroupByGroupId(groupId);
 
-    protected List<Map.Entry<String, Integer>> getTop3UsersFromGroup(List<Ranking> rankings) {
-        Map<String, Integer> map = new HashMap<>();
-        for (Ranking ranking : rankings) {
-            if (!map.containsKey(ranking.getUsers().getName())) {
-                map.put(ranking.getUsers().getName(), 0);
-            }
-            map.compute(ranking.getUsers().getName(), (k, value) -> value + ranking.getCount());
-        }
-
-        return map.entrySet()
-                .stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(3)
+        return IntStream.range(0, mapEntries.entries().size())
+                .mapToObj(i -> RankingModel.GroupRank.from(mapEntries.entries().get(i), i + 1))
                 .toList();
     }
 }

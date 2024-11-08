@@ -11,6 +11,7 @@ import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.group.Groups;
 import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.ranking.Ranking;
+import supernova.whokie.ranking.infrastructure.repoistory.RankingRepository;
 import supernova.whokie.ranking.service.dto.RankingModel;
 import supernova.whokie.user.Users;
 
@@ -30,6 +31,8 @@ class RankingServiceTest {
     private RankingReaderService rankingReaderService;
     @Mock
     private GroupMemberReaderService groupMemberReaderService;
+    @Mock
+    private RankingRepository rankingRepository;
 
     private List<Ranking> rankings;
     private List<Users> users;
