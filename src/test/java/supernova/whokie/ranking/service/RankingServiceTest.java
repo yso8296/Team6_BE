@@ -16,6 +16,7 @@ import supernova.whokie.ranking.service.dto.RankingModel;
 import supernova.whokie.user.Users;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -81,6 +82,26 @@ class RankingServiceTest {
         // then
         assertThatExceptionOfType(EntityNotFoundException.class)
                 .isThrownBy(() -> rankingService.getGroupRanking(userId, groupId));
+    }
+
+    @Test
+    @DisplayName("그룹 내에서 count가 높은 3명 뽑기 테스트")
+    void getTop3UsersFromGroupTest() {
+        // given
+        List<Ranking> rankingList = rankings;
+        int finalCount = rankingList.get(0).getCount() + rankingList.get(1).getCount() + rankingList.get(2).getCount();
+        int finalCount1 = rankingList.get(3).getCount();
+
+        // when
+        List<Map.Entry<String, Integer>> actuals = rankingService.getTop3UsersFromGroup(rankingList);
+
+        assertAll(
+                () -> assertThat(actuals).hasSize(2),
+                () -> assertThat(actuals.get(0).getKey()).isEqualTo(users.get(0).getName()),
+                () -> assertThat(actuals.get(0).getValue()).isEqualTo(finalCount),
+                () -> assertThat(actuals.get(1).getKey()).isEqualTo(users.get(1).getName()),
+                () -> assertThat(actuals.get(1).getValue()).isEqualTo(finalCount1)
+        );
     }
 
     private Groups createGroup() {

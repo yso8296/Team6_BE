@@ -5,6 +5,8 @@ import java.util.Map;
 import lombok.Builder;
 import supernova.whokie.ranking.Ranking;
 
+import java.util.Map;
+
 public class RankingModel {
 
     @Builder
