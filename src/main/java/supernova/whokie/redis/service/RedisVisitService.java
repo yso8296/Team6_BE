@@ -1,7 +1,11 @@
 package supernova.whokie.redis.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import supernova.whokie.global.annotation.RedissonLock;
 import supernova.whokie.profile.service.ProfileVisitReadService;
 import supernova.whokie.redis.entity.RedisVisitCount;
 import supernova.whokie.redis.entity.RedisVisitor;
@@ -10,10 +14,6 @@ import supernova.whokie.redis.infrastructure.repository.RedisVisitorRepository;
 import supernova.whokie.redis.service.dto.RedisCommand;
 import supernova.whokie.redis.util.RedisUtil;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class RedisVisitService {
@@ -21,6 +21,7 @@ public class RedisVisitService {
     private final RedisVisitCountRepository redisVisitCountRepository;
     private final ProfileVisitReadService profileVisitReadService;
 
+    @RedissonLock(value = "#hostId")
     public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
         RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
         if(!checkVisited(hostId, visitorIp)) {
@@ -80,5 +81,4 @@ public class RedisVisitService {
         List<String> ids = visitors.stream().map(RedisVisitor::getId).toList();
         redisVisitorRepository.deleteAllById(ids);
     }
-
 }
