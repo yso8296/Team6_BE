@@ -4,6 +4,7 @@ import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,10 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(EmbeddedRedisConfig.class)
 @TestPropertySource(properties = {
     "jwt.secret=abcd"
 })
+@Import(EmbeddedRedisConfig.class)
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProfileIntegrationTest {
@@ -55,11 +56,15 @@ public class ProfileIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     private Users user;
     private Profile profile;
 
     @BeforeEach
     void setUp() {
+        redissonClient.getKeys().flushall();
         user = createUser();
         profile = createProfile();
         ProfileVisitCount profileVisitCount = createProfileVisitCount();

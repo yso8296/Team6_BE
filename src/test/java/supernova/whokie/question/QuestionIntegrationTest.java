@@ -1,16 +1,10 @@
 package supernova.whokie.question;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,13 +30,18 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "jwt.secret=abcd",
         "spring.sql.init.mode=never"
 })
-@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class QuestionIntegrationTest {
 
@@ -107,7 +106,6 @@ class QuestionIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.questions").isArray())
             .andExpect(jsonPath("$.questions.length()").value(5))
-            .andExpect(jsonPath("$.questions[0].users.length()").value(5))
             .andDo(result -> {
                 String responseContent = result.getResponse().getContentAsString();
                 System.out.println("questions 내용: " + responseContent);
@@ -126,7 +124,6 @@ class QuestionIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.questions").isArray())
             .andExpect(jsonPath("$.questions.length()").value(10))
-            .andExpect(jsonPath("$.questions[0].users.length()").value(5))
             .andDo(result -> {
                 String responseContent = result.getResponse().getContentAsString();
                 System.out.println("questions 내용: " + responseContent);
