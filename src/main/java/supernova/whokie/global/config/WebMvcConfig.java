@@ -12,6 +12,7 @@ import supernova.whokie.global.interceptor.IpInterceptor;
 import supernova.whokie.global.interceptor.JwtInterceptor;
 import supernova.whokie.global.auth.JwtProvider;
 import supernova.whokie.global.resolver.IpArgumentResolver;
+import supernova.whokie.global.resolver.LoginAdminArgumentResolver;
 import supernova.whokie.global.resolver.LoginUserArgumentResolver;
 
 import java.util.List;
@@ -40,6 +41,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public LoginAdminArgumentResolver loginAdminArgumentResolver() {
+        return new LoginAdminArgumentResolver();
+    }
+
+    @Bean
     public IpArgumentResolver ipArgumentResolver() {
         return new IpArgumentResolver();
     }
@@ -56,6 +62,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginUserArgumentResolver());
         resolvers.add(ipArgumentResolver());
+        resolvers.add(loginAdminArgumentResolver());
     }
 
     @Override

@@ -5,7 +5,7 @@ import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class UserModel {
 
@@ -27,24 +27,32 @@ public class UserModel {
 
     @Builder
     public record Info(
+            Long id,
+            String name,
+            String imageUrl,
             String email,
             Gender gender,
+            int point,
             int age,
-            String name,
             Role role,
-            String imageUrl,
-            LocalDate createdAt
+            Long kakaoId,
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt
     ) {
 
-        public static UserModel.Info from(Users user, String url) {
+        public static UserModel.Info from(Users user) {
             return UserModel.Info.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .imageUrl(user.getImageUrl())
                     .email(user.getEmail())
                     .gender(user.getGender())
+                    .point(user.getPoint())
                     .age(user.getAge())
-                    .name(user.getName())
                     .role(user.getRole())
-                    .imageUrl(url)
-                    .createdAt(user.getCreatedAt().toLocalDate())
+                    .kakaoId(user.getKakaoId())
+                    .createdAt(user.getCreatedAt())
+                    .modifiedAt(user.getModifiedAt())
                     .build();
         }
     }

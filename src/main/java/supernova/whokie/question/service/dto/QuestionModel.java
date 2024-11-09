@@ -4,7 +4,7 @@ import lombok.Builder;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class QuestionModel {
 
@@ -30,7 +30,7 @@ public class QuestionModel {
         Long groupId,
         QuestionStatus status,
         String writer,
-        LocalDate createdAt
+        LocalDateTime createdAt
     ) {
 
         public static QuestionModel.Info from(Question question, QuestionStatus status) {
@@ -40,7 +40,7 @@ public class QuestionModel {
                 .groupId(question.getGroupId())
                 .status(status)
                 .writer(question.getWriter().getName())
-                .createdAt(question.getCreatedAt().toLocalDate())
+                .createdAt(question.getCreatedAt())
                 .build();
 
         }
@@ -58,6 +58,25 @@ public class QuestionModel {
                 .questionId(question.getId())
                 .content(question.getContent())
                 .build();
+        }
+    }
+
+    @Builder
+    public record Admin(
+            Long questionId,
+            String questionContent,
+            Long groupId,
+            QuestionStatus status,
+            LocalDateTime createdAt
+    ) {
+        public static QuestionModel.Admin from(Question question) {
+            return QuestionModel.Admin.builder()
+                    .questionId(question.getId())
+                    .questionContent(question.getContent())
+                    .groupId(question.getGroupId())
+                    .status(question.getQuestionStatus())
+                    .createdAt(question.getCreatedAt())
+                    .build();
         }
     }
 }

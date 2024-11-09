@@ -111,4 +111,10 @@ public class GroupService {
             LocalDateTime.now().plusDays(7));
         return GroupModel.InviteCode.from(inviteCode);
     }
+
+    @Transactional(readOnly = true)
+    public Page<GroupModel.Info> getAllGroupPaging(Pageable pageable) {
+        Page<Groups> entities = groupReaderService.getALlGroupPaging(pageable);
+        return entities.map(GroupModel.Info::from);
+    }
 }

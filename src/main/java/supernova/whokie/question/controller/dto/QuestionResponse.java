@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import supernova.whokie.question.QuestionStatus;
 import supernova.whokie.question.service.dto.QuestionModel;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class QuestionResponse {
@@ -88,7 +88,7 @@ public class QuestionResponse {
             Long groupId,
             QuestionStatus status,
             String writer,
-            LocalDate createdAt
+            LocalDateTime createdAt
     ) {
         public static QuestionResponse.Info from(QuestionModel.Info info) {
             return Info.builder()
@@ -100,6 +100,24 @@ public class QuestionResponse {
                     .createdAt(info.createdAt())
                     .build();
         }
+    }
 
+    @Builder
+    public record Admin(
+            Long questionId,
+            String questionContent,
+            Long groupId,
+            QuestionStatus status,
+            LocalDateTime createdAt
+    ) {
+        public static QuestionResponse.Admin from(QuestionModel.Admin model) {
+            return Admin.builder()
+                    .questionId(model.questionId())
+                    .questionContent(model.questionContent())
+                    .groupId(model.groupId())
+                    .status(model.status())
+                    .createdAt(model.createdAt())
+                    .build();
+        }
     }
 }

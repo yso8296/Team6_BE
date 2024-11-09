@@ -1,6 +1,5 @@
 package supernova.whokie.pointrecord.controller;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,12 +9,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import supernova.whokie.global.annotation.Authenticate;
 import supernova.whokie.global.dto.GlobalResponse;
 import supernova.whokie.global.dto.PagingResponse;
 import supernova.whokie.pointrecord.PointRecordOption;
-import supernova.whokie.pointrecord.controller.dto.PointRecordRequest;
 import supernova.whokie.pointrecord.controller.dto.PointRecordResponse;
 import supernova.whokie.pointrecord.sevice.PointRecordService;
 import supernova.whokie.pointrecord.sevice.dto.PointRecordCommand;
@@ -31,12 +32,12 @@ public class PointRecordController {
 
     private final PointRecordService pointRecordService;
 
-    @PostMapping("/purchase")
+    @GetMapping("/purchase")
     public ResponseEntity<Void> purchasePoint(
             @Authenticate Long userId,
-            @RequestBody @Valid PointRecordRequest.Purchase request
+            @RequestParam("point") int point
     ) {
-        PointRecordModel.ReadyInfo readyInfo = pointRecordService.readyPurchasePoint(userId, request.point());
+        PointRecordModel.ReadyInfo readyInfo = pointRecordService.readyPurchasePoint(userId, point);
 
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .header("location", readyInfo.nextRedirectPcUrl())

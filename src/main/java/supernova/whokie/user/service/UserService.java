@@ -2,6 +2,8 @@ package supernova.whokie.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,5 +82,11 @@ public class UserService {
     public void updateImageUrl(Long userId, String imageUrl) {
         Users user = userReaderService.getUserById(userId);
         user.updateImageUrl(imageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserModel.Info> getAllUsersPaging(Pageable pageable) {
+        Page<Users> entities = userReaderService.getAllUsersPaging(pageable);
+        return entities.map(UserModel.Info::from);
     }
 }
