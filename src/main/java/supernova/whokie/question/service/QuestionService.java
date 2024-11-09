@@ -2,7 +2,6 @@ package supernova.whokie.question.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import supernova.whokie.groupmember.GroupMember;
 import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
-import supernova.whokie.question.constants.QuestionConstants;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
 
@@ -50,15 +48,13 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public List<QuestionModel.GroupQuestion> getGroupQuestions(Long userId, Long groupId) {
+    public List<QuestionModel.GroupQuestion> getGroupQuestions(Long userId, Long groupId, Pageable pageable) {
 
         if (!groupMemberReaderService.isGroupMemberExist(userId, groupId)) {
             throw new EntityNotFoundException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
         }
 
-        Pageable pageable = PageRequest.of(0, QuestionConstants.QUESTION_LIMIT);
-        List<Question> randomQuestions = questionReaderService.getRandomGroupQuestions(groupId,
-            pageable);
+        List<Question> randomQuestions = questionReaderService.getRandomGroupQuestions(groupId, pageable);
 
         return randomQuestions.stream()
             .map(QuestionModel.GroupQuestion::from)

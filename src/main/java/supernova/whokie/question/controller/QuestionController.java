@@ -37,11 +37,11 @@ public class QuestionController {
 
     @GetMapping("/group/{group-id}/question/random")
     public QuestionResponse.GroupQuestions getGroupQuestionList(
+        @PageableDefault(page = 0, size = 5) Pageable pageable,
         @PathVariable("group-id") @NotNull @Min(1) Long groupId,
         @Authenticate Long userId
     ) {
-        List<QuestionModel.GroupQuestion> groupQuestions = questionService.getGroupQuestions(userId,
-            groupId);
+        List<QuestionModel.GroupQuestion> groupQuestions = questionService.getGroupQuestions(userId, groupId, pageable);
         return QuestionResponse.GroupQuestions.from(groupQuestions);
     }
 
