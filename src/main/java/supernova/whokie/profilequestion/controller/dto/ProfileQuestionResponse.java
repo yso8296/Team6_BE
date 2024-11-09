@@ -3,7 +3,7 @@ package supernova.whokie.profilequestion.controller.dto;
 import lombok.Builder;
 import supernova.whokie.profilequestion.service.dto.ProfileQuestionModel;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ProfileQuestionResponse {
@@ -24,14 +24,14 @@ public class ProfileQuestionResponse {
     public record Question(
             Long profileQuestionId,
             String profileQuestionContent,
-            LocalDate createdAt
+            LocalDateTime createdAt
     ) {
 
         public static Question from(ProfileQuestionModel.Info info) {
             return Question.builder()
                     .profileQuestionId(info.id())
                     .profileQuestionContent(info.content())
-                    .createdAt(info.createdAt().toLocalDate())
+                    .createdAt(info.createdAt())
                     .build();
         }
     }
