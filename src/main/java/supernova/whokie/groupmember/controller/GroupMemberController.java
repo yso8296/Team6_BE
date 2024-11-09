@@ -24,6 +24,8 @@ import supernova.whokie.groupmember.controller.dto.GroupMemberResponse;
 import supernova.whokie.groupmember.service.GroupMemberService;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/group")
@@ -51,15 +53,25 @@ public class GroupMemberController {
     }
 
     @GetMapping("/{group-id}/member")
-    public PagingResponse<GroupMemberResponse.Member> getGroupMemberList(
+    public PagingResponse<GroupMemberResponse.Member> getGroupMemberPaging(
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
         @PathVariable("group-id") @NotNull @Min(1) Long groupId,
         @Authenticate Long userId
     ) {
-        Page<GroupMemberModel.Member> model = groupMemberService.getGroupMembers(pageable, userId,
+        Page<GroupMemberModel.Member> model = groupMemberService.getGroupMemberPaging(pageable, userId,
             groupId);
         Page<GroupMemberResponse.Member> response = model.map(GroupMemberResponse.Member::from);
         return PagingResponse.from(response);
+    }
+
+    @GetMapping("/{group-id}/member/list")
+    public GroupMemberResponse.Members getGroupMemberList(
+            @PathVariable("group-id") @NotNull @Min(1) Long groupId,
+            @Authenticate Long userId
+    ) {
+        List<GroupMemberModel.Member> model = groupMemberService.getGroupMemberList(userId, groupId);
+        List<GroupMemberResponse.Member> members = model.stream().map(GroupMemberResponse.Member::from).toList();
+        return GroupMemberResponse.Members.from(members);
     }
 
     @PostMapping("/join")

@@ -32,7 +32,7 @@ public class GroupMemberReaderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<GroupMember> getGroupMembers(Pageable pageable, Long userId, Long groupId) {
+    public Page<GroupMember> getGroupMemberPaging(Pageable pageable, Long userId, Long groupId) {
         if (!groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new EntityNotFoundException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
         }
@@ -41,10 +41,12 @@ public class GroupMemberReaderService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupMember> getRandomGroupMembersByGroupId(Long userId, Long groupId,
-        Pageable pageable) {
-        return groupMemberRepository.getRandomGroupMemberJoinFetch(userId,
-            groupId, pageable);
+    public List<GroupMember> getGroupMembersList(Long userId, Long groupId) {
+        if (!groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
+            throw new EntityNotFoundException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
+        }
+
+        return groupMemberRepository.getGroupMemberJoinFetch(userId, groupId);
     }
 
     @Transactional(readOnly = true)
