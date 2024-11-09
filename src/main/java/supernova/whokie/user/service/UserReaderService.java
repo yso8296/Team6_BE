@@ -3,6 +3,8 @@ package supernova.whokie.user.service;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.global.constants.MessageConstants;
@@ -44,4 +46,8 @@ public class UserReaderService {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Users> getAllUsersPaging(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 }

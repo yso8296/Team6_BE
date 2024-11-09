@@ -47,10 +47,10 @@ public class QuestionController {
 
     @PostMapping("/group/question")
     public GlobalResponse createGroupQuestion(
-        @RequestBody @Valid QuestionRequest.Create request,
+        @RequestBody @Valid QuestionRequest.GroupCreate request,
         @Authenticate Long userId
     ) {
-        questionService.createQuestion(userId, request.toCommand());
+        questionService.createGroupQuestion(userId, request.toCommand());
         return GlobalResponse.builder().message("질문이 성공적으로 생성되었습니다.").build();
     }
 
