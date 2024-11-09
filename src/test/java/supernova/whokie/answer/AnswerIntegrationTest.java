@@ -245,6 +245,7 @@ class AnswerIntegrationTest {
     @DisplayName("해당 월에 질문이 있는 날짜 반환 테스트")
     void getAnswerRecordDaysTest() throws Exception {
         LocalDate date = LocalDate.of(2024, 11, 1); // 해당 월 전체 조회
+        int todayDay = LocalDate.now().getDayOfMonth();
 
         mockMvc.perform(get("/api/answer/record/days")
                 .param("date", date.toString())
@@ -252,7 +253,7 @@ class AnswerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.days").isArray())
-                .andExpect(jsonPath("$.days").value(org.hamcrest.Matchers.containsInAnyOrder(8)));
+                .andExpect(jsonPath("$.days").value(org.hamcrest.Matchers.containsInAnyOrder(todayDay)));
 
     }
 
