@@ -48,4 +48,8 @@ public class QuestionReaderService {
                 () -> new EntityNotFoundException(MessageConstants.QUESTION_NOT_FOUND_MESSAGE));
     }
 
+    @Transactional(readOnly = true)
+    public Page<Question> getAllQuestionPaging(Pageable pageable) {
+        return questionRepository.findAll(pageable);
+    }
 }
