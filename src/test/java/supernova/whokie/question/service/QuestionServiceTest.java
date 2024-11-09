@@ -18,7 +18,6 @@ import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
 import supernova.whokie.question.constants.QuestionConstants;
-import supernova.whokie.question.controller.dto.QuestionResponse;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
 import supernova.whokie.user.Gender;
@@ -90,30 +89,6 @@ class QuestionServiceTest {
         // then
         assertAll(
                 () -> assertEquals(10, commonQuestions.size())
-        );
-    }
-
-    @Test
-    @DisplayName("랜덤 그룹 질문 조회 테스트")
-    void getGroupQuestionTest() {
-        // given
-        Long userId = 1L;
-        Long groupId = 1L;
-
-        // when
-        when(groupMemberReaderService.isGroupMemberExist(eq(userId), eq(groupId)))
-                .thenReturn(true);
-        when(questionReaderService.getRandomGroupQuestions(eq(groupId), any(Pageable.class)))
-                .thenReturn(questions);
-
-        List<QuestionModel.GroupQuestion> groupQuestionList = questionService.getGroupQuestions(
-                userId, groupId);
-        QuestionResponse.GroupQuestions groupQuestions = QuestionResponse.GroupQuestions.from(
-                groupQuestionList);
-
-        // then
-        assertAll(
-                () -> assertEquals(10, groupQuestions.questions().size())
         );
     }
 

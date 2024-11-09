@@ -1,11 +1,24 @@
 package supernova.whokie.groupmember.controller.dto;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.Builder;
 import supernova.whokie.groupmember.GroupRole;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
 
 public class GroupMemberResponse {
+
+    @Builder
+    public record Members(
+            List<GroupMemberResponse.Member> members
+    ) {
+        public static Members from(List<Member> members) {
+            return Members.builder()
+                    .members(members)
+                    .build();
+        }
+    }
 
     @Builder
     public record Member(

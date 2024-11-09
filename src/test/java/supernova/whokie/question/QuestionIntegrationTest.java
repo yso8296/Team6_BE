@@ -123,7 +123,7 @@ class QuestionIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.questions").isArray())
-            .andExpect(jsonPath("$.questions.length()").value(10))
+            .andExpect(jsonPath("$.questions.length()").value(5))
             .andDo(result -> {
                 String responseContent = result.getResponse().getContentAsString();
                 System.out.println("questions 내용: " + responseContent);

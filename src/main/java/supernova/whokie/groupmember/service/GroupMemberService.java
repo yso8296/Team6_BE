@@ -18,6 +18,8 @@ import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GroupMemberService {
@@ -72,9 +74,9 @@ public class GroupMemberService {
 
 
     @Transactional(readOnly = true)
-    public Page<GroupMemberModel.Member> getGroupMembers(Pageable pageable, Long userId,
-        Long groupId) {
-        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(pageable, userId,
+    public Page<GroupMemberModel.Member> getGroupMemberPaging(Pageable pageable, Long userId,
+                                                              Long groupId) {
+        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMemberPaging(pageable, userId,
             groupId);
         return groupMembers.map(entity -> {
             String imageUrl = entity.getUser().getImageUrl();
@@ -83,6 +85,19 @@ public class GroupMemberService {
             }
             return GroupMemberModel.Member.from(entity, imageUrl);
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupMemberModel.Member> getGroupMemberList(Long userId, Long groupId) {
+        List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembersList(userId, groupId);
+
+        return groupMembers.stream().map(entity -> {
+            String imageUrl = entity.getUser().getImageUrl();
+            if (entity.getUser().isImageUrlStoredInS3()) {
+                imageUrl = s3Service.getSignedUrl(imageUrl);
+            }
+            return GroupMemberModel.Member.from(entity, imageUrl);
+        }).toList();
     }
 
     @Transactional
