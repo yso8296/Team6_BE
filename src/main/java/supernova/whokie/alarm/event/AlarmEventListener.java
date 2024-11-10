@@ -11,7 +11,7 @@ import supernova.whokie.alarm.service.AlarmService;
 public class AlarmEventListener {
     private final AlarmService alarmService;
 
-    @Async
+//    @Async
     @EventListener
     public void alarmListener(AlarmEventDto.Alarm event) {
         alarmService.alarmToConnectedUser(event);
