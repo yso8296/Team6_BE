@@ -1,13 +1,12 @@
 package supernova.whokie.pointrecord.controller;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +21,6 @@ import supernova.whokie.pointrecord.sevice.PointRecordService;
 import supernova.whokie.pointrecord.sevice.dto.PointRecordCommand;
 import supernova.whokie.pointrecord.sevice.dto.PointRecordModel;
 
-import java.time.LocalDate;
-
 @RestController
 @RequestMapping("/api/point")
 @RequiredArgsConstructor
@@ -33,21 +30,17 @@ public class PointRecordController {
     private final PointRecordService pointRecordService;
 
     @GetMapping("/purchase")
-    public ResponseEntity<Void> purchasePoint(
-            @Authenticate Long userId,
-            @RequestParam("point") int point
+    public PointRecordModel.ReadyInfo purchasePoint(
+        @Authenticate Long userId,
+        @RequestParam("point") int point
     ) {
-        PointRecordModel.ReadyInfo readyInfo = pointRecordService.readyPurchasePoint(userId, point);
-
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header("location", readyInfo.nextRedirectPcUrl())
-                .build();
+        return pointRecordService.readyPurchasePoint(userId, point);
     }
 
     @GetMapping("/purchase/approve")
     public GlobalResponse payApproved(
-            @Authenticate Long userId,
-            @RequestParam("pg_token") String pgToken
+        @Authenticate Long userId,
+        @RequestParam("pg_token") String pgToken
     ) {
         pointRecordService.approvePurchasePoint(userId, pgToken);
         return GlobalResponse.builder().message("포인트 결제가 완료되었습니다.").build();
