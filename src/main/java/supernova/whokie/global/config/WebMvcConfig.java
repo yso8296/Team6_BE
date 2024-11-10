@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     @Order(2)
-    public VisitorInterceptor ipInterceptor() {
+    public VisitorInterceptor visitorInterceptor() {
         return new VisitorInterceptor();
     }
 
@@ -46,7 +46,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public VisitorArgumentResolver ipArgumentResolver() {
+    public VisitorArgumentResolver visitorArgumentResolver() {
         return new VisitorArgumentResolver();
     }
 
@@ -54,14 +54,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/api/**");
-        registry.addInterceptor(ipInterceptor())
-                .addPathPatterns("/api/profile/**");
+        registry.addInterceptor(visitorInterceptor())
+                .addPathPatterns("/api/profile");
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginUserArgumentResolver());
-        resolvers.add(ipArgumentResolver());
+        resolvers.add(visitorArgumentResolver());
         resolvers.add(loginAdminArgumentResolver());
     }
 
