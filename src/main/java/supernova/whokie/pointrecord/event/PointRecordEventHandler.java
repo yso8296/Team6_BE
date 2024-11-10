@@ -13,7 +13,7 @@ public class PointRecordEventHandler {
 
     private final PointRecordService pointRecordService;
 
-//    @Async
+    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void earnPointListener(PointRecordEventDto.Earn event) {
 
