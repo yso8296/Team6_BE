@@ -8,10 +8,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import supernova.whokie.global.interceptor.IpInterceptor;
+import supernova.whokie.global.interceptor.VisitorInterceptor;
 import supernova.whokie.global.interceptor.JwtInterceptor;
 import supernova.whokie.global.auth.JwtProvider;
-import supernova.whokie.global.resolver.IpArgumentResolver;
+import supernova.whokie.global.resolver.VisitorArgumentResolver;
 import supernova.whokie.global.resolver.LoginAdminArgumentResolver;
 import supernova.whokie.global.resolver.LoginUserArgumentResolver;
 
@@ -31,8 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     @Order(2)
-    public IpInterceptor ipInterceptor() {
-        return new IpInterceptor();
+    public VisitorInterceptor ipInterceptor() {
+        return new VisitorInterceptor();
     }
 
     @Bean
@@ -46,8 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public IpArgumentResolver ipArgumentResolver() {
-        return new IpArgumentResolver();
+    public VisitorArgumentResolver ipArgumentResolver() {
+        return new VisitorArgumentResolver();
     }
 
     @Override
