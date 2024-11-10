@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import supernova.whokie.answer.controller.dto.AnswerRequest;
@@ -57,14 +57,15 @@ public class AnswerController {
 
     @GetMapping("/record")
     public PagingResponse<AnswerResponse.Record> getAnswerRecord(
-        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
         @RequestParam(name = "date", required = false) LocalDate date,
         @Authenticate Long userId
     ) {
-
-        Page<AnswerModel.Record> page = answerService.getAnswerRecord(pageable, userId,
+        Pageable pageable = PageRequest.of(page, size, Sort.unsorted());
+        Page<AnswerModel.Record> models = answerService.getAnswerRecord(pageable, userId,
             date);
-        Page<AnswerResponse.Record> response = page.map(AnswerResponse.Record::from);
+        Page<AnswerResponse.Record> response = models.map(AnswerResponse.Record::from);
         return PagingResponse.from(response);
     }
     @GetMapping("/record/days")

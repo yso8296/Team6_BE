@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import supernova.whokie.global.annotation.Authenticate;
-import supernova.whokie.global.annotation.VisitorIp;
+import supernova.whokie.global.annotation.VisitorUuid;
 import supernova.whokie.global.dto.GlobalResponse;
 import supernova.whokie.profile.controller.dto.ProfileRequest;
 import supernova.whokie.profile.controller.dto.ProfileResponse;
@@ -26,9 +26,9 @@ public class ProfileController {
     @GetMapping("/{user-id}")
     public ProfileResponse.Info getProfileInfo(
             @PathVariable("user-id") @Valid @NotNull @Min(1) Long userId,
-            @VisitorIp String visitorIp
+            @VisitorUuid String visitorUuid
     ) {
-        ProfileModel.Info response = profileService.getProfile(userId, visitorIp);
+        ProfileModel.Info response = profileService.getProfile(userId, visitorUuid);
         return ProfileResponse.Info.from(response);
     }
 
