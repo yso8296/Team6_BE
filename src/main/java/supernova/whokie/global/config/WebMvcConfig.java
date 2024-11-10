@@ -55,7 +55,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/api/**");
         registry.addInterceptor(visitorInterceptor())
-                .addPathPatterns("/api/profile");
+                .addPathPatterns("/api/profile/**");
     }
 
     @Override
