@@ -4,6 +4,7 @@ import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,12 +14,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import supernova.whokie.answer.infrastructure.repository.AnswerRepository;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import supernova.whokie.answer.constants.AnswerConstants;
+import supernova.whokie.answer.infrastructure.repository.AnswerRepository;
 import supernova.whokie.friend.Friend;
 import supernova.whokie.friend.infrastructure.repository.FriendRepository;
-import supernova.whokie.global.constants.Constants;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.infrastructure.repository.GroupRepository;
 import supernova.whokie.question.Question;
@@ -43,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "jwt.secret=abcd",
         "spring.sql.init.mode=never"
 })
-@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
+@MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AnswerIntegrationTest {
 
@@ -126,7 +127,7 @@ class AnswerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("답변 완료"));
         Users userAfterAnswer = userRepository.findById(userId).orElseThrow();
         int finalPoint = userAfterAnswer.getPoint();
-        assertThat(finalPoint).isEqualTo(initialPoint + Constants.ANSWER_POINT);
+        assertThat(finalPoint).isEqualTo(initialPoint + AnswerConstants.ANSWER_POINT);
     }
 
     @Test
@@ -189,7 +190,7 @@ class AnswerIntegrationTest {
     void purchaseHintTest() throws Exception {
         Long answerId = 1L;
         Long userId = 1L;
-        int hintPurchasePoint = 20;
+        int hintPurchasePoint = 30;
 
         int initialPoint = userRepository.findById(userId).orElseThrow().getPoint();
 
@@ -237,7 +238,22 @@ class AnswerIntegrationTest {
 
         Users userAfterAnswer = userRepository.findById(userId).orElseThrow();
         int finalPoint = userAfterAnswer.getPoint();
-        assertThat(finalPoint).isEqualTo(100 + Constants.ANSWER_POINT);
+        assertThat(finalPoint).isEqualTo(100 + AnswerConstants.ANSWER_POINT);
+    }
+
+    @Test
+    @DisplayName("해당 월에 질문이 있는 날짜 반환 테스트")
+    void getAnswerRecordDaysTest() throws Exception {
+        LocalDate date = LocalDate.of(2024, 11, 1); // 해당 월 전체 조회
+
+        mockMvc.perform(get("/api/answer/record/days")
+                .param("date", date.toString())
+                .requestAttr("userId", "1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.days").isArray())
+                .andExpect(jsonPath("$.days").value(org.hamcrest.Matchers.containsInAnyOrder(8)));
+
     }
 
     private void createAnswer(Question question, Users picker, Users picked) {
@@ -247,7 +263,6 @@ class AnswerIntegrationTest {
                 .picked(picked)
                 .hintCount(2)
                 .build();
-//        ReflectionTestUtils.setField(answer, "createdAt", LocalDateTime.of(2024, 9, 19, 0, 0));
         answerRepository.save(answer);
     }
 

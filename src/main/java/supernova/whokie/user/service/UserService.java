@@ -1,21 +1,23 @@
 package supernova.whokie.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import supernova.whokie.global.auth.JwtProvider;
 import supernova.whokie.profile.service.ProfileVisitWriterService;
 import supernova.whokie.profile.service.ProfileWriterService;
 import supernova.whokie.redis.service.KakaoTokenService;
+import supernova.whokie.s3.event.S3EventDto;
+import supernova.whokie.s3.util.S3Util;
 import supernova.whokie.user.Users;
+import supernova.whokie.user.constants.UserConstants;
 import supernova.whokie.user.infrastructure.apicaller.UserApiCaller;
 import supernova.whokie.user.infrastructure.apicaller.dto.KakaoAccount;
 import supernova.whokie.user.infrastructure.apicaller.dto.TokenInfoResponse;
 import supernova.whokie.user.infrastructure.apicaller.dto.UserInfoResponse;
-import supernova.whokie.user.infrastructure.repository.UserRepository;
 import supernova.whokie.user.service.dto.UserModel;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +30,12 @@ public class UserService {
     private final UserWriterService userWriterService;
     private final UserReaderService userReaderService;
     private final KakaoTokenService kakaoTokenService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public String getCodeUrl() {
         return userApiCaller.createCodeUrl();
     }
 
-    //TODO 리팩 필요
     @Transactional
     public UserModel.Login register(String code) {
         // 토큰 발급
@@ -47,8 +49,9 @@ public class UserService {
         Users user = userReaderService.findByEmail(kakaoAccount.email())
             .orElseGet(() -> {
                 Users newUser = userWriterService.saveUserFromKakao(userInfoResponse);
-                profileWriterService.saveFromKaKao(newUser, kakaoAccount);
+                profileWriterService.saveFromKaKao(newUser);
                 profileVisitWriterService.save(newUser.getId());
+
                 return newUser;
             });
 
@@ -58,13 +61,24 @@ public class UserService {
         return UserModel.Login.from(jwt, user.getId());
     }
 
-    public UserModel.Info getUserInfo(Long userId) {
-        Users user = userReaderService.getUserById(userId);
-        return UserModel.Info.from(user);
-    }
-
+    @Transactional(readOnly = true)
     public UserModel.Point getPoint(Long userId) {
         Users user = userReaderService.getUserById(userId);
         return UserModel.Point.from(user);
+    }
+
+    @Transactional
+    public void uploadImageUrl(Long userId, MultipartFile imageFile) {
+        String key = S3Util.generateS3Key(UserConstants.USER_IMAGE_FOLRDER, userId);
+        S3EventDto.Upload event = S3EventDto.Upload.toDto(imageFile, key, UserConstants.USER_IMAGE_WIDTH, UserConstants.USER_IMAGE_HEIGHT);
+        eventPublisher.publishEvent(event);
+
+        updateImageUrl(userId, key);
+    }
+
+    @Transactional
+    public void updateImageUrl(Long userId, String imageUrl) {
+        Users user = userReaderService.getUserById(userId);
+        user.updateImageUrl(imageUrl);
     }
 }

@@ -4,6 +4,7 @@ import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,11 +19,13 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.config.EmbeddedRedisConfig;
 import supernova.whokie.profile.infrastructure.repository.ProfileRepository;
 import supernova.whokie.profile.infrastructure.repository.ProfileVisitCountRepository;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,10 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(EmbeddedRedisConfig.class)
 @TestPropertySource(properties = {
     "jwt.secret=abcd"
 })
+@Import(EmbeddedRedisConfig.class)
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProfileIntegrationTest {
@@ -47,29 +50,38 @@ public class ProfileIntegrationTest {
     @Autowired
     ProfileVisitCountRepository profileVisitCountRepository;
 
+    @MockBean
+    private S3Service s3Service;
+
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     private Users user;
     private Profile profile;
-    private ProfileVisitCount profileVisitCount;
 
     @BeforeEach
     void setUp() {
+        redissonClient.getKeys().flushall();
         user = createUser();
         profile = createProfile();
-        profileVisitCount = createProfileVisitCount();
+        ProfileVisitCount profileVisitCount = createProfileVisitCount();
     }
 
     @Test
     @DisplayName("프로필 조회")
     void getProfileInfo() throws Exception {
+        String key = "keykey";
+        given(s3Service.getSignedUrl(profile.getBackgroundImageUrl())).willReturn(key);
+
         mockMvc.perform(get("/api/profile/{user-id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("test"))
             .andExpect(jsonPath("$.description").value("test"))
-            .andExpect(jsonPath("$.backgroundImageUrl").value("test"))
+            .andExpect(jsonPath("$.backgroundImageUrl").value(key))
             .andDo(print());
     }
 
@@ -82,6 +94,7 @@ public class ProfileIntegrationTest {
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)
+            .imageUrl("url")
             .build();
 
         return userRepository.save(user);

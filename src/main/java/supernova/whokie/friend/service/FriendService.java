@@ -1,6 +1,6 @@
 package supernova.whokie.friend.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.friend.Friend;
@@ -9,6 +9,7 @@ import supernova.whokie.friend.infrastructure.apicaller.dto.KakaoDto;
 import supernova.whokie.friend.service.dto.FriendCommand;
 import supernova.whokie.friend.service.dto.FriendModel;
 import supernova.whokie.redis.service.KakaoTokenService;
+import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FriendService {
 
     private final FriendKakaoApiCaller apiCaller;
@@ -24,6 +25,7 @@ public class FriendService {
     private final FriendReaderService friendReaderService;
     private final KakaoTokenService kakaoTokenService;
     private final FriendWriterService friendWriterService;
+    private final S3Service s3Service;
 
     @Transactional
     public List<FriendModel.Info> getKakaoFriends(Long userId) {
@@ -37,7 +39,15 @@ public class FriendService {
         Set<Long> existingSet = friendReaderService.getFriendIdsByHostUser(userId);
 
         return friendUsers.stream()
-            .map(user -> FriendModel.Info.from(user, existingSet.contains(user.getId())))
+            .map(user -> {
+                boolean isFriend = existingSet.contains(user.getId());
+                String imageUrl = user.getImageUrl();
+                if (user.isImageUrlStoredInS3()) {
+                    imageUrl = s3Service.getSignedUrl(imageUrl);
+                }
+
+                return FriendModel.Info.from(user, isFriend, imageUrl);
+            })
             .toList();
     }
 

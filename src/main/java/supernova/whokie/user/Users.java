@@ -15,10 +15,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import supernova.whokie.answer.Answer;
-import supernova.whokie.global.constants.Constants;
 import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.entity.BaseTimeEntity;
 import supernova.whokie.global.exception.InvalidEntityException;
+import supernova.whokie.user.constants.UserConstants;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -67,21 +67,40 @@ public class Users extends BaseTimeEntity {
         this.point -= point;
     }
 
-    public void decreasePointsByHintCount(Answer answer) {
+    public int decreasePointsByHintCount(Answer answer) {
+        int decreasedPoint = 0;
         switch (answer.getHintCount()) {
+            case 0:
+                decreasedPoint = UserConstants.FIRST_HINT_PURCHASE_POINT;
+                checkUserHasNotEnoughPoint(decreasedPoint);
+                decreasePoint(decreasedPoint);
+                break;
             case 1:
-                checkUserHasNotEnoughPoint(Constants.FIRST_HINT_PURCHASE_POINT);
-                decreasePoint(Constants.FIRST_HINT_PURCHASE_POINT);
+                decreasedPoint = UserConstants.SECOND_HINT_PURCHASE_POINT;
+                checkUserHasNotEnoughPoint(decreasedPoint);
+                decreasePoint(decreasedPoint);
                 break;
             case 2:
-                checkUserHasNotEnoughPoint(Constants.SECOND_HINT_PURCHASE_POINT);
-                decreasePoint(Constants.SECOND_HINT_PURCHASE_POINT);
+                decreasedPoint = UserConstants.THIRD_HINT_PURCHASE_POINT;
+                checkUserHasNotEnoughPoint(decreasedPoint);
+                decreasePoint(decreasedPoint);
                 break;
-            case 3:
-                checkUserHasNotEnoughPoint(Constants.THIRD_HINT_PURCHASE_POINT);
-                decreasePoint(Constants.THIRD_HINT_PURCHASE_POINT);
-                break;
+            default:
+                throw new InvalidEntityException(MessageConstants.ALL_HINT_USED_MESSAGE);
         }
+        return decreasedPoint;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isImageUrlStoredInS3() {
+        return imageUrl.equals(UserConstants.USER_IMAGE_FOLRDER + "/" + id + ".png");
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     private void checkUserHasNotEnoughPoint(int point) {

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import supernova.whokie.question.service.dto.QuestionModel;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Validated
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -79,8 +81,7 @@ public class QuestionController {
         @Authenticate Long userId,
         @PageableDefault(page = 0, size = 5) Pageable pageable
     ) {
-        List<QuestionModel.CommonQuestion> commonQuestions = questionService.getCommonQuestion(
-            userId, pageable);
+        List<QuestionModel.CommonQuestion> commonQuestions = questionService.getCommonQuestion(pageable);
         return QuestionResponse.CommonQuestions.from(commonQuestions);
     }
 

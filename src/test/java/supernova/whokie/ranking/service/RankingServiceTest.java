@@ -1,6 +1,5 @@
 package supernova.whokie.ranking.service;
 
-import io.awspring.cloud.s3.S3Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,13 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.group.Groups;
-import supernova.whokie.group_member.service.GroupMemberReaderService;
+import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.ranking.Ranking;
+import supernova.whokie.ranking.infrastructure.repoistory.RankingRepository;
 import supernova.whokie.ranking.service.dto.RankingModel;
 import supernova.whokie.user.Users;
 
@@ -26,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-@MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 class RankingServiceTest {
     @InjectMocks
     private RankingService rankingService;
@@ -34,14 +30,16 @@ class RankingServiceTest {
     private RankingReaderService rankingReaderService;
     @Mock
     private GroupMemberReaderService groupMemberReaderService;
+    @Mock
+    private RankingRepository rankingRepository;
 
     private List<Ranking> rankings;
-    private Users user1;
+    private List<Users> users;
     private Groups group1;
 
     @BeforeEach
     void setUp() {
-        user1 = createUser();
+        users = createUser();
         group1 = createGroup();
         rankings = createRankings();
     }
@@ -50,12 +48,13 @@ class RankingServiceTest {
     @DisplayName("특정 유저 랭킹 조회")
     void getUserRankingTest() {
         // given
-        Users user = user1;
+        Users user = users.get(0);
         Ranking ranking1 = rankings.get(0);
         Ranking ranking2 = rankings.get(1);
         Ranking ranking3 = rankings.get(2);
+        List<Ranking> rankingList = List.of(ranking1, ranking2, ranking3);
         given(rankingReaderService.getTop3RankingByUserId(user.getId()))
-                .willReturn(rankings);
+                .willReturn(rankingList);
 
         // when
         List<RankingModel.Rank> actual = rankingService.getUserRanking(user.getId());
@@ -73,7 +72,7 @@ class RankingServiceTest {
     @DisplayName("특정 그룹 랭킹 조회 실패")
     void getGroupRankingTest() {
         // given
-        Long userId = user1.getId();
+        Long userId = users.get(0).getId();
         Long groupId = group1.getId();
         given(groupMemberReaderService.isGroupMemberExist(userId, groupId))
                 .willReturn(false);
@@ -89,13 +88,16 @@ class RankingServiceTest {
     }
 
     private List<Ranking> createRankings() {
-        Ranking ranking1 = Ranking.builder().users(user1).count(100).groups(group1).build();
-        Ranking ranking2 = Ranking.builder().users(user1).count(90).groups(group1).build();
-        Ranking ranking3 = Ranking.builder().users(user1).count(80).groups(group1).build();
-        return List.of(ranking1, ranking2, ranking3);
+        Ranking ranking1 = Ranking.builder().users(users.get(0)).count(100).groups(group1).build();
+        Ranking ranking2 = Ranking.builder().users(users.get(0)).count(90).groups(group1).build();
+        Ranking ranking3 = Ranking.builder().users(users.get(0)).count(80).groups(group1).build();
+        Ranking ranking4 = Ranking.builder().users(users.get(1)).count(80).groups(group1).build();
+        return List.of(ranking1, ranking2, ranking3, ranking4);
     }
 
-    private Users createUser() {
-        return Users.builder().id(1L).build();
+    private List<Users> createUser() {
+        Users user1 =  Users.builder().id(1L).name("name1").build();
+        Users user2 =  Users.builder().id(2L).name("name2").build();
+        return List.of(user1, user2);
     }
 }
