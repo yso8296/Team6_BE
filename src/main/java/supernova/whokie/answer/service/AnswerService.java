@@ -173,7 +173,7 @@ public class AnswerService {
 
         // 포인트 기록
         PointRecordEventDto.Earn pointEvent = PointRecordEventDto.Earn.toDto(userId, AnswerConstants.ANSWER_POINT, 0,
-                PointRecordOption.CHARGED, PointConstants.POINT_EARN_MESSAGE);
+                PointRecordOption.EARN, PointConstants.POINT_EARN_MESSAGE);
         eventPublisher.publishEvent(pointEvent);
     }
 }

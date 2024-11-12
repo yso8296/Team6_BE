@@ -59,11 +59,9 @@ public class PointRecordService {
 
         int purchasedPoint = payApproveInfoResponse.amount().total();
         user.increasePoint(purchasedPoint);
-        var event = PointRecordEventDto.Earn.toDto(userId, purchasedPoint, purchasedPoint,
-                PointRecordOption.CHARGED,
-                PointConstants.POINT_PURCHASE_MESSAGE);
-
-        eventPublisher.publishEvent(event);
+        PointRecord record = PointRecord.create(userId, purchasedPoint, purchasedPoint,
+                PointRecordOption.CHARGED, PointConstants.POINT_PURCHASE_MESSAGE);
+        pointRecordWriterService.save(record);
 
         // 레디스 DB에서 tid 삭제
         redisPayService.deleteByUserId(userId);

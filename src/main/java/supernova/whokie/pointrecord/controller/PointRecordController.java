@@ -52,7 +52,7 @@ public class PointRecordController {
         @RequestParam(name = "start-date", defaultValue = "1900-01-01") LocalDate startDate,
         @RequestParam(name = "end-date", defaultValue = "2100-01-01") LocalDate endDate,
         @RequestParam(name = "option") @NotNull PointRecordOption option,
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PointRecordCommand.Record command = new PointRecordCommand.Record(startDate, endDate,
             option);

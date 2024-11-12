@@ -1,5 +1,5 @@
 package supernova.whokie.pointrecord;
 
 public enum PointRecordOption {
-    ALL, USED, CHARGED
+    ALL, USED, CHARGED, EARN
 }
