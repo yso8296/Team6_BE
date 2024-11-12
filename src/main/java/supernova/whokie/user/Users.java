@@ -62,6 +62,8 @@ public class Users extends BaseTimeEntity {
     private Role role;
 
     public int getAge() {
+        if(birthDate == null) return 0;
+
         return Period.between(this.birthDate, LocalDate.now()).getYears();
     }
 
