@@ -17,9 +17,9 @@ import supernova.whokie.group.service.dto.GroupCommand;
 import supernova.whokie.group.service.dto.GroupModel;
 import supernova.whokie.group.service.dto.GroupModel.InfoWithMemberCount;
 import supernova.whokie.groupmember.GroupMember;
+import supernova.whokie.groupmember.provider.InviteCodeProvider;
 import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.groupmember.service.GroupMemberWriterService;
-import supernova.whokie.groupmember.util.InviteCodeUtil;
 import supernova.whokie.s3.event.S3EventDto;
 import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.s3.util.S3Util;
@@ -36,6 +36,7 @@ public class GroupService {
     private final GroupMemberReaderService groupMemberReaderService;
     private final ApplicationEventPublisher eventPublisher;
     private final S3Service s3Service;
+    private final InviteCodeProvider InviteCodeProvider;
 
     /**
      * 그룹 생성후, 그룹장을 생성한 유저로 지정한다.
@@ -107,7 +108,7 @@ public class GroupService {
         if (!groupMemberReaderService.isGroupMemberExist(userId, groupId)) {
             throw new ForbiddenException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
         }
-        String inviteCode = InviteCodeUtil.createCode(groupId, LocalDateTime.now(),
+        String inviteCode = InviteCodeProvider.createCode(groupId, LocalDateTime.now(),
             LocalDateTime.now().plusDays(7));
         return GroupModel.InviteCode.from(inviteCode);
     }
@@ -120,7 +121,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public Page<GroupModel.Info> searchGroups(String keyword, Pageable pageable) {
-        Page<Groups> entities = groupReaderService.getGroupsByName(pageable,keyword);
+        Page<Groups> entities = groupReaderService.getGroupsByName(pageable, keyword);
         return entities.map(GroupModel.Info::from);
     }
 }

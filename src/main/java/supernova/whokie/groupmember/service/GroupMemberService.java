@@ -1,5 +1,6 @@
 package supernova.whokie.groupmember.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,14 +13,13 @@ import supernova.whokie.global.exception.InvalidConditionException;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.service.GroupReaderService;
 import supernova.whokie.groupmember.GroupMember;
+import supernova.whokie.groupmember.provider.CodeData;
+import supernova.whokie.groupmember.provider.InviteCodeProvider;
 import supernova.whokie.groupmember.service.dto.GroupMemberCommand;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
-import supernova.whokie.groupmember.util.CodeData;
 import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +30,7 @@ public class GroupMemberService {
     private final UserReaderService userReaderService;
     private final GroupReaderService groupReaderService;
     private final S3Service s3Service;
+    private final InviteCodeProvider inviteCodeProvider;
 
     @Transactional
     public void delegateLeader(Long userId, GroupMemberCommand.Modify command) {
@@ -61,7 +62,7 @@ public class GroupMemberService {
 
     @Transactional
     public void joinGroup(GroupMemberCommand.Join command, Long userId) {
-        CodeData codeData = command.getUrlData();
+        CodeData codeData = command.getUrlData(inviteCodeProvider);
 
         if (groupMemberReaderService.isGroupMemberExist(userId, codeData.groupId())) {
             throw new ForbiddenException(MessageConstants.ALREADY_GROUP_MEMBER_MESSAGE);
@@ -76,8 +77,9 @@ public class GroupMemberService {
 
     @Transactional(readOnly = true)
     public Page<GroupMemberModel.Member> getGroupMemberPaging(Pageable pageable, Long userId,
-                                                              Long groupId) {
-        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMemberPaging(pageable, userId,
+        Long groupId) {
+        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMemberPaging(pageable,
+            userId,
             groupId);
         return groupMembers.map(entity -> {
             String imageUrl = entity.getUser().getImageUrl();
@@ -90,7 +92,8 @@ public class GroupMemberService {
 
     @Transactional(readOnly = true)
     public List<GroupMemberModel.Member> getGroupMemberList(Long userId, Long groupId) {
-        List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembersList(userId, groupId);
+        List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembersList(userId,
+            groupId);
 
         return groupMembers.stream().map(entity -> {
             String imageUrl = entity.getUser().getImageUrl();
