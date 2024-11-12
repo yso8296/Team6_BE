@@ -16,14 +16,9 @@ public class UserRequest {
             @NotNull
             String gender,
             @NotNull
-            int year,
-            @NotNull
-            int month,
-            @NotNull
-            int day
+            LocalDate birthDate
     ) {
         public UserCommand.Info toCommand() {
-            LocalDate birthDate = LocalDate.of(year, month, day);
             return UserCommand.Info.builder()
                     .name(name)
                     .gender(Gender.fromString(gender))
