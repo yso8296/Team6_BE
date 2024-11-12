@@ -11,8 +11,8 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-    "jwt.secret=abcd"
-
+    "jwt.secret=abcd",
+    "url.secret-key=abcd"
 })
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
 class WhokieApplicationTests {

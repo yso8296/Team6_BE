@@ -31,7 +31,8 @@ import static org.mockito.BDDMockito.given;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Import(EmbeddedRedisConfig.class)
 @TestPropertySource(properties = {
-        "jwt.secret=abcd"
+        "jwt.secret=abcd",
+        "url.secret-key=abcd"
 })
 class RedisVisitServiceTest {
     @Autowired

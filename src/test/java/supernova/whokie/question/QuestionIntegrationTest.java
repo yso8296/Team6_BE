@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "jwt.secret=abcd",
+        "url.secret-key=abcd",
         "spring.sql.init.mode=never"
 })
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
