@@ -37,7 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class})
 @TestPropertySource(properties = {
-    "jwt.secret=abcd"
+    "jwt.secret=abcd",
+    "url.secret-key=abcd"
 })
 @Import(EmbeddedRedisConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
