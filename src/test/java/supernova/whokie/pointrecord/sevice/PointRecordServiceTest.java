@@ -1,4 +1,4 @@
-package supernova.whokie.point_record.sevice;
+package supernova.whokie.pointrecord.sevice;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import supernova.whokie.pointrecord.constants.PointConstants;
 import supernova.whokie.pointrecord.infrastructure.apicaller.PayApiCaller;
 import supernova.whokie.pointrecord.infrastructure.apicaller.dto.PayApproveInfoResponse;
 import supernova.whokie.pointrecord.infrastructure.apicaller.dto.PayReadyInfoResponse;
-import supernova.whokie.pointrecord.sevice.PointRecordService;
 import supernova.whokie.pointrecord.sevice.dto.PointRecordModel;
 import supernova.whokie.redis.service.RedisPayService;
 import supernova.whokie.user.Gender;
@@ -36,6 +35,9 @@ class PointRecordServiceTest {
 
     @Mock
     private RedisPayService redisPayService;
+
+    @Mock
+    private PointRecordWriterService pointRecordWriterService;
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
