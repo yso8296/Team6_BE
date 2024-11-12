@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Value;
 import supernova.whokie.global.exception.InviteCodeException;
 
 public final class InviteCodeUtil {
 
-    private static final String URL_SECRET_KEY = "dummy-key-123456"; // 16-byte key for AES
+    @Value("${url.secret-key}")
+    private static String URL_SECRET_KEY; // 16-byte key for AES
 
     private InviteCodeUtil() {
         // 인스턴스화 방지
