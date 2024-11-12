@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import supernova.whokie.user.controller.dto.UserRequest;
 import supernova.whokie.user.controller.dto.UserResponse;
 import supernova.whokie.user.service.UserService;
 import supernova.whokie.user.service.dto.UserModel;
+
+import java.time.Duration;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +44,16 @@ public class UserController {
     ) {
         UserModel.Login model = userService.register(code);
 
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", model.jwt())
+                .path("/")
+                .maxAge(Duration.ofHours(24))
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .build();
+
         return ResponseEntity.status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header("Authorization", model.jwt())
                 .body(UserResponse.Login.from(model));
     }

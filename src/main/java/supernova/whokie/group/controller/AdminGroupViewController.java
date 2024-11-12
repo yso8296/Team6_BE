@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import supernova.whokie.global.annotation.AdminAuthenticate;
 import supernova.whokie.group.controller.dto.GroupResponse;
 import supernova.whokie.group.service.GroupService;
 
@@ -24,7 +23,6 @@ public class AdminGroupViewController {
 
     @GetMapping("")
     public String groupList(
-            @AdminAuthenticate Long userId,
             @RequestParam(name = "keyword", required = false) String keyword,
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             Model model

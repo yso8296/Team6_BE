@@ -8,7 +8,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import supernova.whokie.global.annotation.AdminAuthenticate;
 import supernova.whokie.global.dto.PagingResponse;
 import supernova.whokie.user.controller.dto.UserResponse;
 import supernova.whokie.user.service.UserService;
@@ -23,7 +22,6 @@ public class AdminUserController {
 
     @GetMapping("")
     public PagingResponse<UserResponse.Info> getAllUsers(
-            @AdminAuthenticate Long userId,
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         Page<UserModel.Info> models = userService.getAllUsersPaging(pageable);
