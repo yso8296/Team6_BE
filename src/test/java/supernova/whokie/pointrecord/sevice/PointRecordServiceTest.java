@@ -1,4 +1,4 @@
-package supernova.whokie.point_record.sevice;
+package supernova.whokie.pointrecord.sevice;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,13 +11,14 @@ import supernova.whokie.pointrecord.constants.PointConstants;
 import supernova.whokie.pointrecord.infrastructure.apicaller.PayApiCaller;
 import supernova.whokie.pointrecord.infrastructure.apicaller.dto.PayApproveInfoResponse;
 import supernova.whokie.pointrecord.infrastructure.apicaller.dto.PayReadyInfoResponse;
-import supernova.whokie.pointrecord.sevice.PointRecordService;
 import supernova.whokie.pointrecord.sevice.dto.PointRecordModel;
 import supernova.whokie.redis.service.RedisPayService;
 import supernova.whokie.user.Gender;
 import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
+
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -34,6 +35,9 @@ class PointRecordServiceTest {
 
     @Mock
     private RedisPayService redisPayService;
+
+    @Mock
+    private PointRecordWriterService pointRecordWriterService;
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
@@ -91,7 +95,7 @@ class PointRecordServiceTest {
                 .name("Test User 1")
                 .email("test@example.com")
                 .point(100)
-                .age(20)
+                .birthDate(LocalDate.now())
                 .kakaoId(1234567890L)
                 .gender(Gender.M)
                 .imageUrl("default_image_url.jpg")

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import supernova.whokie.global.annotation.RedissonLock;
 import supernova.whokie.profile.service.ProfileVisitReadService;
@@ -14,6 +15,7 @@ import supernova.whokie.redis.infrastructure.repository.RedisVisitorRepository;
 import supernova.whokie.redis.service.dto.RedisCommand;
 import supernova.whokie.redis.util.RedisUtil;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RedisVisitService {
@@ -24,6 +26,7 @@ public class RedisVisitService {
     @RedissonLock(value = "#hostId")
     public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
         RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
+        log.info("visitorIp: {}", visitorIp);
         if(!checkVisited(hostId, visitorIp)) {
             redisVisitCount.visit();
             redisVisitCountRepository.save(redisVisitCount);

@@ -1,21 +1,25 @@
-package supernova.whokie.groupmember.util;
+package supernova.whokie.groupmember.provider;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import supernova.whokie.global.exception.InviteCodeException;
 
-public final class InviteCodeUtil {
+@Component
+public class InviteCodeProvider {
 
-    private static final String URL_SECRET_KEY = "dummy-key-123456"; // 16-byte key for AES
+    @Value("${url.secret-key}")
+    private String urlSecretKey; // 16-byte key for AES
 
-    private InviteCodeUtil() {
+    private InviteCodeProvider() {
         // 인스턴스화 방지
     }
 
-    public static String createCode(Long groupId, LocalDateTime startDateTime,
+    public String createCode(Long groupId, LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
         String data = groupId + "|" + startDateTime + "|" + endDateTime;
         try {
@@ -25,8 +29,9 @@ public final class InviteCodeUtil {
         }
     }
 
-    private static String encrypt(String data) throws Exception {
-        SecretKeySpec secretKey = new SecretKeySpec(URL_SECRET_KEY.getBytes(StandardCharsets.UTF_8),
+    private String encrypt(String data) throws Exception {
+        System.out.println(urlSecretKey);
+        SecretKeySpec secretKey = new SecretKeySpec(urlSecretKey.getBytes(StandardCharsets.UTF_8),
             "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -35,18 +40,17 @@ public final class InviteCodeUtil {
         return Base64.getUrlEncoder().encodeToString(encryptedBytes); // URL-safe encoding
     }
 
-    private static String decrypt(String encryptedData) {
+    private String decrypt(String encryptedData) {
         try {
-            String decryptedData = decryptData(encryptedData);
-            return decryptedData;
+            return decryptData(encryptedData);
         } catch (Exception e) {
             e.printStackTrace();
             throw new InviteCodeException("코드가 옳바르지 않습니다.");
         }
     }
 
-    private static String decryptData(String encryptedData) throws Exception {
-        SecretKeySpec secretKey = new SecretKeySpec(URL_SECRET_KEY.getBytes(StandardCharsets.UTF_8),
+    private String decryptData(String encryptedData) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(urlSecretKey.getBytes(StandardCharsets.UTF_8),
             "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -57,7 +61,7 @@ public final class InviteCodeUtil {
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 
-    public static CodeData parseCodeData(String encryptedUrl) {
+    public CodeData parseCodeData(String encryptedUrl) {
         try {
             String decryptedData = decrypt(encryptedUrl);
             String[] parts = decryptedData.split("\\|");

@@ -18,7 +18,6 @@ import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
 import supernova.whokie.question.constants.QuestionConstants;
-import supernova.whokie.question.controller.dto.QuestionResponse;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
 import supernova.whokie.user.Gender;
@@ -26,6 +25,7 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +67,12 @@ class QuestionServiceTest {
     @BeforeEach
     void setUp() {
         user = createUser();
-        questions = createQuestions(10);
+        questions = createGroupQuestions(10);
         groupMembers = createGroupMembers(5);
         friends = createFriends(user,5);
         groupMember = createGroupMember(GroupRole.MEMBER);
         leaderGroupMember = createGroupMember(GroupRole.LEADER);
-        question = createQuestion();
+        question = createGroupQuestion();
     }
 
     @Test
@@ -94,32 +94,8 @@ class QuestionServiceTest {
     }
 
     @Test
-    @DisplayName("랜덤 그룹 질문 조회 테스트")
-    void getGroupQuestionTest() {
-        // given
-        Long userId = 1L;
-        Long groupId = 1L;
-
-        // when
-        when(groupMemberReaderService.isGroupMemberExist(eq(userId), eq(groupId)))
-                .thenReturn(true);
-        when(questionReaderService.getRandomGroupQuestions(eq(groupId), any(Pageable.class)))
-                .thenReturn(questions);
-
-        List<QuestionModel.GroupQuestion> groupQuestionList = questionService.getGroupQuestions(
-                userId, groupId);
-        QuestionResponse.GroupQuestions groupQuestions = QuestionResponse.GroupQuestions.from(
-                groupQuestionList);
-
-        // then
-        assertAll(
-                () -> assertEquals(10, groupQuestions.questions().size())
-        );
-    }
-
-    @Test
     @DisplayName("그룹 질문 생성 테스트")
-    void createQuestionTest() {
+    void createGroupQuestionTest() {
         // given
         QuestionCommand.Create command = new QuestionCommand.Create(1L, "Test Question");
 
@@ -127,7 +103,7 @@ class QuestionServiceTest {
         when(groupMemberReaderService.getByUserIdAndGroupId(anyLong(), anyLong()))
                 .thenReturn(groupMember);
 
-        questionService.createQuestion(user.getId(), command);
+        questionService.createGroupQuestion(user.getId(), command);
 
         // then
         verify(groupMemberReaderService, times(1)).getByUserIdAndGroupId(anyLong(), anyLong());
@@ -161,7 +137,7 @@ class QuestionServiceTest {
             .name("test")
             .email("test@gmail.com")
             .point(1500)
-            .age(22)
+            .birthDate(LocalDate.now())
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)
@@ -169,7 +145,7 @@ class QuestionServiceTest {
             .build();
     }
 
-    private List<Question> createQuestions(int count) {
+    private List<Question> createGroupQuestions(int count) {
         List<Question> questions = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
             questions.add(Question.builder()
@@ -217,7 +193,7 @@ class QuestionServiceTest {
             .build();
     }
 
-    private Question createQuestion() {
+    private Question createGroupQuestion() {
         return Question.builder()
             .id(1L)
             .groupId(1L)

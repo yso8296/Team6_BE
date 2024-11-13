@@ -6,19 +6,19 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import supernova.whokie.global.annotation.VisitorIp;
+import supernova.whokie.global.annotation.VisitorUuid;
 
-public class IpArgumentResolver implements HandlerMethodArgumentResolver {
+public class VisitorArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(VisitorIp.class);
+        return parameter.hasParameterAnnotation(VisitorUuid.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return request.getAttribute("visitorIp");
+        return request.getAttribute("visitorUuid");
     }
 }

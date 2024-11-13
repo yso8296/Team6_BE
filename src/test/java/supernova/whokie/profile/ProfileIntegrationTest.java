@@ -25,6 +25,8 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import java.time.LocalDate;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-    "jwt.secret=abcd"
+    "jwt.secret=abcd",
+    "url.secret-key=abcd"
 })
 @Import(EmbeddedRedisConfig.class)
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class})
@@ -90,7 +93,7 @@ public class ProfileIntegrationTest {
             .name("test")
             .email("test@gmail.com")
             .point(1500)
-            .age(22)
+            .birthDate(LocalDate.now())
             .kakaoId(1L)
             .gender(Gender.M)
             .role(Role.USER)

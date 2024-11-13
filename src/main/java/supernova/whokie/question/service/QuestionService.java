@@ -2,7 +2,6 @@ package supernova.whokie.question.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +11,10 @@ import supernova.whokie.groupmember.GroupMember;
 import supernova.whokie.groupmember.service.GroupMemberReaderService;
 import supernova.whokie.question.Question;
 import supernova.whokie.question.QuestionStatus;
-import supernova.whokie.question.constants.QuestionConstants;
 import supernova.whokie.question.service.dto.QuestionCommand;
 import supernova.whokie.question.service.dto.QuestionModel;
+import supernova.whokie.user.Users;
+import supernova.whokie.user.service.UserReaderService;
 
 import java.util.List;
 
@@ -25,6 +25,7 @@ public class QuestionService {
     private final GroupMemberReaderService groupMemberReaderService;
     private final QuestionReaderService questionReaderService;
     private final QuestionWriterService questionWriterService;
+    private final UserReaderService userReaderService;
 
     @Transactional(readOnly = true)
     public List<QuestionModel.CommonQuestion> getCommonQuestion(Pageable pageable) {
@@ -50,15 +51,13 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public List<QuestionModel.GroupQuestion> getGroupQuestions(Long userId, Long groupId) {
+    public List<QuestionModel.GroupQuestion> getGroupQuestions(Long userId, Long groupId, Pageable pageable) {
 
         if (!groupMemberReaderService.isGroupMemberExist(userId, groupId)) {
             throw new EntityNotFoundException(MessageConstants.GROUP_MEMBER_NOT_FOUND_MESSAGE);
         }
 
-        Pageable pageable = PageRequest.of(0, QuestionConstants.QUESTION_LIMIT);
-        List<Question> randomQuestions = questionReaderService.getRandomGroupQuestions(groupId,
-            pageable);
+        List<Question> randomQuestions = questionReaderService.getRandomGroupQuestions(groupId, pageable);
 
         return randomQuestions.stream()
             .map(QuestionModel.GroupQuestion::from)
@@ -66,7 +65,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public void createQuestion(Long userId, QuestionCommand.Create command) {
+    public void createGroupQuestion(Long userId, QuestionCommand.Create command) {
         GroupMember groupMember = groupMemberReaderService.getByUserIdAndGroupId(userId,
             command.groupId());
         groupMember.validateApprovalStatus();
@@ -74,6 +73,20 @@ public class QuestionService {
         Question question = command.toEntity(groupMember.getUser());
 
         questionWriterService.save(question);
+    }
+
+    @Transactional
+    public void createCommonQuestion(Long userId, QuestionCommand.Create command) {
+        Users admin = userReaderService.getUserById(userId);
+        Question question = command.toEntity(admin);
+
+        questionWriterService.save(question);
+    }
+
+    @Transactional
+    public void deleteCommonQuestion(Long userId, Long questionId) {
+        Users admin = userReaderService.getUserById(userId);
+        questionWriterService.delete(questionId);
     }
 
     @Transactional
@@ -86,5 +99,11 @@ public class QuestionService {
             command.groupId());
 
         question.changeStatus(command.status());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<QuestionModel.Admin> getAllQuestionPaging(Pageable pageable) {
+        Page<Question> entities = questionReaderService.getAllQuestionPaging(pageable);
+        return entities.map(QuestionModel.Admin::from);
     }
 }

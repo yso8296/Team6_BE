@@ -37,20 +37,20 @@ public class QuestionController {
 
     @GetMapping("/group/{group-id}/question/random")
     public QuestionResponse.GroupQuestions getGroupQuestionList(
+        @PageableDefault(page = 0, size = 5) Pageable pageable,
         @PathVariable("group-id") @NotNull @Min(1) Long groupId,
         @Authenticate Long userId
     ) {
-        List<QuestionModel.GroupQuestion> groupQuestions = questionService.getGroupQuestions(userId,
-            groupId);
+        List<QuestionModel.GroupQuestion> groupQuestions = questionService.getGroupQuestions(userId, groupId, pageable);
         return QuestionResponse.GroupQuestions.from(groupQuestions);
     }
 
     @PostMapping("/group/question")
     public GlobalResponse createGroupQuestion(
-        @RequestBody @Valid QuestionRequest.Create request,
+        @RequestBody @Valid QuestionRequest.GroupCreate request,
         @Authenticate Long userId
     ) {
-        questionService.createQuestion(userId, request.toCommand());
+        questionService.createGroupQuestion(userId, request.toCommand());
         return GlobalResponse.builder().message("질문이 성공적으로 생성되었습니다.").build();
     }
 

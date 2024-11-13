@@ -94,6 +94,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
+    @ExceptionHandler(InvalidConditionException.class)
+    public ResponseEntity<ProblemDetail> invalidConditionException(InvalidConditionException e) {
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(RequireAdditionalDataException.class)
+    public ResponseEntity<ProblemDetail> requireAdditionalDataException(RequireAdditionalDataException e) {
+        ProblemDetail problemDetail = setCustomProblemDetail(e);
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+    }
+
     private ProblemDetail setCustomProblemDetail(CustomException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(e.getStatus());
         problemDetail.setTitle(e.getTitle());

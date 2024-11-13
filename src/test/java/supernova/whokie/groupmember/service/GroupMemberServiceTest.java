@@ -20,6 +20,7 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -109,7 +110,7 @@ public class GroupMemberServiceTest {
 
     @Test
     @DisplayName("그룹 내 멤버 조회")
-    void getGroupMembers() throws Exception {
+    void getGroupMemberPaging() throws Exception {
         // given
         Field createdAtField = BaseTimeEntity.class.getDeclaredField("createdAt");
         createdAtField.setAccessible(true);
@@ -117,11 +118,11 @@ public class GroupMemberServiceTest {
         createdAtField.set(member, LocalDateTime.now());
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").ascending());
         Page<GroupMember> page = new PageImpl<>(List.of(leader, member));
-        given(groupMemberReaderService.getGroupMembers(pageable, userId, groupId))
+        given(groupMemberReaderService.getGroupMemberPaging(pageable, userId, groupId))
             .willReturn(page);
 
         // when
-        Page<GroupMemberModel.Member> members = groupMemberService.getGroupMembers(pageable, userId,
+        Page<GroupMemberModel.Member> members = groupMemberService.getGroupMemberPaging(pageable, userId,
             groupId);
 
         // then
@@ -144,7 +145,7 @@ public class GroupMemberServiceTest {
             .name("test")
             .email(email)
             .point(1500)
-            .age(22)
+            .birthDate(LocalDate.now())
             .kakaoId(1L)
             .imageUrl("signedUrl")
             .gender(Gender.M)

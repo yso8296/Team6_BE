@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     @EntityGraph(attributePaths = {"picked"})
-    @Query("SELECT p FROM Answer p WHERE p.picked = :user AND p.createdAt BETWEEN :startDate AND :endDate")
+    @Query("SELECT p FROM Answer p WHERE p.picked = :user AND p.createdAt BETWEEN :startDate AND :endDate ORDER BY p.createdAt DESC")
     Page<Answer> findAllByPickedAndCreatedAtBetween(Pageable pageable, @Param("user") Users user, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT DISTINCT FUNCTION('day', p.createdAt) FROM Answer p WHERE p.picked = :user AND p.createdAt BETWEEN :startDate AND :endDate")

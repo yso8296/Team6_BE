@@ -1,5 +1,7 @@
 package supernova.whokie.friend.service;
 
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +14,6 @@ import supernova.whokie.redis.service.KakaoTokenService;
 import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
-
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,7 @@ public class FriendService {
         // userId로 kakaoAccessToken 조회
         String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(userId);
         List<KakaoDto.Profile> profiles = apiCaller.getKakaoFriends(accessToken).elements();
+        System.out.println(profiles);
         List<Long> kakaoId = profiles.stream().map(KakaoDto.Profile::id).toList();
         List<Users> friendUsers = userReaderService.getUserListByKakaoIdIn(kakaoId);
 

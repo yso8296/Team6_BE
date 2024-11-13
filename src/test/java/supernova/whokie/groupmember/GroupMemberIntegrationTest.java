@@ -26,6 +26,7 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @TestPropertySource(properties = {
     "jwt.secret=abcd",
+    "url.secret-key=abcd",
     "spring.sql.init.mode=never"
 })
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
@@ -97,7 +99,8 @@ public class GroupMemberIntegrationTest {
         mockMvc.perform(patch("/api/group/leader")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
-                .requestAttr("userId", String.valueOf(user1.getId())))
+                .requestAttr("userId", String.valueOf(user1.getId()))
+                .requestAttr("role", "USER"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("그룹장 위임에 성공하였습니다."))
             .andDo(print());
@@ -124,7 +127,8 @@ public class GroupMemberIntegrationTest {
         mockMvc.perform(post("/api/group/expel")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
-                .requestAttr("userId", String.valueOf(user1.getId())))
+                .requestAttr("userId", String.valueOf(user1.getId()))
+                .requestAttr("role", "USER"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("그룹 멤버 강퇴에 성공하였습니다."))
             .andDo(print());
@@ -141,6 +145,7 @@ public class GroupMemberIntegrationTest {
 
         mockMvc.perform(get("/api/group/{group-id}/member", group.getId())
                 .requestAttr("userId", String.valueOf(user1.getId()))
+                .requestAttr("role", "USER")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content").isArray())
@@ -165,7 +170,7 @@ public class GroupMemberIntegrationTest {
             .name("test")
             .email(email)
             .point(1500)
-            .age(22)
+            .birthDate(LocalDate.now())
             .kakaoId(1L)
             .imageUrl("image")
             .gender(Gender.M)

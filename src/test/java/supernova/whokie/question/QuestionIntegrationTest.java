@@ -30,6 +30,8 @@ import supernova.whokie.user.Role;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.infrastructure.repository.UserRepository;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "jwt.secret=abcd",
+        "url.secret-key=abcd",
         "spring.sql.init.mode=never"
 })
 @MockBean({S3Client.class, S3Template.class, S3Presigner.class, RedissonClient.class})
@@ -102,6 +105,7 @@ class QuestionIntegrationTest {
 
         mockMvc.perform(get("/api/common/question/random")
                 .requestAttr("userId", "1")
+                .requestAttr("role", "USER")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.questions").isArray())
@@ -120,10 +124,11 @@ class QuestionIntegrationTest {
 
         mockMvc.perform(get("/api/group/{group-id}/question/random", 1L)
                 .requestAttr("userId", "7")
+                .requestAttr("role", "USER")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.questions").isArray())
-            .andExpect(jsonPath("$.questions.length()").value(10))
+            .andExpect(jsonPath("$.questions.length()").value(5))
             .andDo(result -> {
                 String responseContent = result.getResponse().getContentAsString();
                 System.out.println("questions 내용: " + responseContent);
@@ -143,7 +148,8 @@ class QuestionIntegrationTest {
         mockMvc.perform(post("/api/group/question")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
-                .requestAttr("userId", "7"))
+                .requestAttr("userId", "7")
+                .requestAttr("role", "USER"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("질문이 성공적으로 생성되었습니다."))
             .andDo(print());
@@ -163,7 +169,8 @@ class QuestionIntegrationTest {
         mockMvc.perform(patch("/api/group/question/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
-                .requestAttr("userId", String.valueOf(17)))
+                .requestAttr("userId", String.valueOf(17))
+                .requestAttr("role", "USER"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("그룹 질문 승인에 성공하였습니다."))
             .andDo(print());
@@ -178,6 +185,7 @@ class QuestionIntegrationTest {
         mockMvc.perform(get("/api/group/1/question")
                 .param("status", "APPROVED") // APPROVED 상태
                 .requestAttr("userId", "1")
+                .requestAttr("role", "USER")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content").isArray())
@@ -200,6 +208,7 @@ class QuestionIntegrationTest {
         mockMvc.perform(get("/api/group/1/question")
                 .param("status", "REJECTED") // REJECTED 상태
                 .requestAttr("userId", "1")
+                .requestAttr("role", "USER")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content").isArray())
@@ -220,7 +229,7 @@ class QuestionIntegrationTest {
                     .name("Test User")
                     .email("test" + index + "@example.com")
                     .point(0)
-                    .age(20)
+                    .birthDate(LocalDate.now())
                     .kakaoId(1234567890L)
                     .gender(Gender.M)
                     .imageUrl("default_image_url.jpg")
@@ -267,7 +276,7 @@ class QuestionIntegrationTest {
             .name("Friend " + index)
             .email("friend" + index + "@example.com")
             .point(0)
-            .age(20)
+            .birthDate(LocalDate.now())
             .kakaoId(1234567890L + index)
             .gender(Gender.F)
             .imageUrl("default_image_url_friend_" + index + ".jpg")
@@ -282,7 +291,7 @@ class QuestionIntegrationTest {
             .name("Test User " + index)
             .email("test@example.com")
             .point(0)
-            .age(20)
+            .birthDate(LocalDate.now())
             .kakaoId(1234567890L)
             .gender(Gender.M)
             .imageUrl("default_image_url.jpg")

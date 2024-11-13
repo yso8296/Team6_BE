@@ -40,4 +40,14 @@ public class GroupReaderService {
     public boolean isGroupExist(Long groupId) {
         return groupRepository.existsById(groupId);
     }
+
+    @Transactional(readOnly = true)
+    public Page<Groups> getALlGroupPaging(Pageable pageable) {
+        return groupRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Groups> getGroupsByName(Pageable pageable, String groupName) {
+        return groupRepository.findAllByGroupNameContaining(groupName, pageable);
+    }
 }

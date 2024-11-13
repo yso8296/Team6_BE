@@ -1,5 +1,6 @@
 package supernova.whokie.groupmember.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,12 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import supernova.whokie.global.constants.MessageConstants;
 import supernova.whokie.global.exception.EntityNotFoundException;
 import supernova.whokie.global.exception.ForbiddenException;
+import supernova.whokie.global.exception.InvalidConditionException;
 import supernova.whokie.group.Groups;
 import supernova.whokie.group.service.GroupReaderService;
 import supernova.whokie.groupmember.GroupMember;
+import supernova.whokie.groupmember.provider.CodeData;
+import supernova.whokie.groupmember.provider.InviteCodeProvider;
 import supernova.whokie.groupmember.service.dto.GroupMemberCommand;
 import supernova.whokie.groupmember.service.dto.GroupMemberModel;
-import supernova.whokie.groupmember.util.CodeData;
 import supernova.whokie.s3.service.S3Service;
 import supernova.whokie.user.Users;
 import supernova.whokie.user.service.UserReaderService;
@@ -27,6 +30,7 @@ public class GroupMemberService {
     private final UserReaderService userReaderService;
     private final GroupReaderService groupReaderService;
     private final S3Service s3Service;
+    private final InviteCodeProvider inviteCodeProvider;
 
     @Transactional
     public void delegateLeader(Long userId, GroupMemberCommand.Modify command) {
@@ -58,7 +62,7 @@ public class GroupMemberService {
 
     @Transactional
     public void joinGroup(GroupMemberCommand.Join command, Long userId) {
-        CodeData codeData = command.getUrlData();
+        CodeData codeData = command.getUrlData(inviteCodeProvider);
 
         if (groupMemberReaderService.isGroupMemberExist(userId, codeData.groupId())) {
             throw new ForbiddenException(MessageConstants.ALREADY_GROUP_MEMBER_MESSAGE);
@@ -72,9 +76,10 @@ public class GroupMemberService {
 
 
     @Transactional(readOnly = true)
-    public Page<GroupMemberModel.Member> getGroupMembers(Pageable pageable, Long userId,
+    public Page<GroupMemberModel.Member> getGroupMemberPaging(Pageable pageable, Long userId,
         Long groupId) {
-        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMembers(pageable, userId,
+        Page<GroupMember> groupMembers = groupMemberReaderService.getGroupMemberPaging(pageable,
+            userId,
             groupId);
         return groupMembers.map(entity -> {
             String imageUrl = entity.getUser().getImageUrl();
@@ -83,6 +88,20 @@ public class GroupMemberService {
             }
             return GroupMemberModel.Member.from(entity, imageUrl);
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupMemberModel.Member> getGroupMemberList(Long userId, Long groupId) {
+        List<GroupMember> groupMembers = groupMemberReaderService.getGroupMembersList(userId,
+            groupId);
+
+        return groupMembers.stream().map(entity -> {
+            String imageUrl = entity.getUser().getImageUrl();
+            if (entity.getUser().isImageUrlStoredInS3()) {
+                imageUrl = s3Service.getSignedUrl(imageUrl);
+            }
+            return GroupMemberModel.Member.from(entity, imageUrl);
+        }).toList();
     }
 
     @Transactional
@@ -113,7 +132,7 @@ public class GroupMemberService {
             Long groupMemberSize = groupMemberReaderService.groupMemberCountByGroupId(
                 command.groupId());
             if (groupMemberSize > 1) {
-                throw new ForbiddenException("그룹에 속한 멤버가 본인 한명일 경우에 탈퇴 가능합니다.");
+                throw new InvalidConditionException("그룹에 속한 멤버가 본인 한명일 경우에 탈퇴 가능합니다.");
             }
         }
         groupMemberWriterService.deleteByUserIdAndGroupId(command.groupId(), userId);

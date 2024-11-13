@@ -45,8 +45,8 @@ public class ProfileAnswerService {
     public void deleteProfileAnswer(Long userId, Long profileAnswerId) {
         ProfileAnswer profileAnswer = profileAnswerReaderService.getByIdWithAnsweredUser(
             profileAnswerId);
-        if (!profileAnswer.isOwner(userId)) {
-            throw new ForbiddenException("답변을 작성한 사람만 삭제할 수 있습니다.");
+        if (!profileAnswer.getProfileQuestion().isOwner(userId)) {
+            throw new ForbiddenException("프로필 당사자만 삭제할 수 있습니다.");
         }
         profileAnswerWriterService.deleteById(profileAnswerId);
     }

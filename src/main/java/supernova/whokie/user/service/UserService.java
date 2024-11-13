@@ -2,6 +2,8 @@ package supernova.whokie.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import supernova.whokie.user.infrastructure.apicaller.UserApiCaller;
 import supernova.whokie.user.infrastructure.apicaller.dto.KakaoAccount;
 import supernova.whokie.user.infrastructure.apicaller.dto.TokenInfoResponse;
 import supernova.whokie.user.infrastructure.apicaller.dto.UserInfoResponse;
+import supernova.whokie.user.service.dto.UserCommand;
 import supernova.whokie.user.service.dto.UserModel;
 
 @Service
@@ -58,7 +61,14 @@ public class UserService {
         // kakao token 저장
         kakaoTokenService.saveToken(user.getId(), tokenResponse);
         String jwt = jwtProvider.createToken(user.getId(), user.getRole());
-        return UserModel.Login.from(jwt, user.getId());
+        return UserModel.Login.from(jwt, user.getId(), user.getRole());
+    }
+
+    @Transactional
+    public UserModel.Login addPersonalInformation(Long userId, UserCommand.Info command) {
+        Users user = userWriterService.updateUserPersonalInfo(userId, command);
+        String jwt = jwtProvider.createToken(userId, user.getRole());
+        return UserModel.Login.from(jwt, userId, user.getRole());
     }
 
     @Transactional(readOnly = true)
@@ -80,5 +90,17 @@ public class UserService {
     public void updateImageUrl(Long userId, String imageUrl) {
         Users user = userReaderService.getUserById(userId);
         user.updateImageUrl(imageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserModel.Info> getAllUsersPaging(Pageable pageable) {
+        Page<Users> entities = userReaderService.getAllUsersPaging(pageable);
+        return entities.map(UserModel.Info::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserModel.Info> searchUsers(String keyword, Pageable pageable) {
+        Page<Users> entities = userReaderService.findByNameContainingOrEmailContaining(keyword, keyword, pageable);
+        return entities.map(UserModel.Info::from);
     }
 }

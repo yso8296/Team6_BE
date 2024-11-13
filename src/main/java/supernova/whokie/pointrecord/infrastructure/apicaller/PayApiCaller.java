@@ -78,7 +78,7 @@ public class PayApiCaller {
         body.put("partner_user_id", String.valueOf(userId));
         body.put("item_name", productName);
         body.put("quantity", String.valueOf(point));
-        body.put("total_amount", String.valueOf(point));
+        body.put("total_amount", String.valueOf(point * 10));
         body.put("tax_free_amount", "0");
         body.put("approval_url", kakaoPayProperties.approveRedirectUrl());
         body.put("fail_url", kakaoPayProperties.failRedirectUrl());
