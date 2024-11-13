@@ -11,7 +11,7 @@ import supernova.whokie.s3.service.S3Service;
 public class S3EventHandler {
     private final S3Service s3Service;
 
-    @Async
+//    @Async
     @EventListener
     public void s3UploadListener(S3EventDto.Upload event) {
         s3Service.uploadFile(event);
