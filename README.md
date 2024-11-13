@@ -37,16 +37,15 @@ https://whokie.com
 - **GitHub Actions**: 코드 푸시 시 테스트 및 배포 자동화
 
 ## ⚠️ ISSUE
-- 테스트 자동화 [https://velog.io/@momnpa333/github-actionsspring-test-자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
-- https, 도메인 통합 [https://velog.io/@momnpa333/https-nginx-spring-s3-docker-로-배포하기](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
-- 성능 테스트 도입기
- [https://velog.io/@momnpa333/성능테스트-ngrinder-활용하기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
-- SSE
-- TestConfiguration이 SpringBootTest에서 Scan되지 않은 이유
-- n+1 해결 시 @EntityGraph 사용  https://geonit.tistory.com/72
-- 카카오페이 api (포인트 결제)  https://geonit.tistory.com/71
-- Redisson 분산락을 통한 동시성 제어  https://yso8296.tistory.com/29
-- @Async를 이용한 비동기 처리 https://yso8296.tistory.com/28
+- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
+- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
+- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [SSE로 웹알림 구현](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
+- [TestConfiguration이 SpringBootTest에서 Scan되지 않은 이유](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+- [n+1 해결 시 @EntityGraph 사용](https://geonit.tistory.com/72)
+- [카카오페이 api (포인트 결제)](https://geonit.tistory.com/71)
+- [Redisson 분산락을 통한 동시성 제어](https://yso8296.tistory.com/29)
+- [@Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
 
 ## 🏗 시스템 아키텍쳐
 <img width="689" alt="image" src="https://github.com/user-attachments/assets/84f81964-df7f-46af-9983-a5cbc2ec8a62">
@@ -59,8 +58,11 @@ https://whokie.com
 ### V2. Service 분리
 <img width="703" alt="image" src="https://github.com/user-attachments/assets/70cc556d-ead9-4c07-ab7c-f2a99952194b">
 
-- Async 적용기
-- Scheduler 젹용기
+### V2.1. Event, Async 적용
+![스크린샷 2024-10-19 221305](https://github.com/user-attachments/assets/76a88b4a-8439-4220-8af7-5d3bc6f30bde)
+
+### V2.2. Redis 적용
+![스크린샷 2024-11-14 031642](https://github.com/user-attachments/assets/9d3ba974-4361-4aa8-9fde-b947bc246b73)
 
 ## 🌳 GIT 브랜치 전략
 
