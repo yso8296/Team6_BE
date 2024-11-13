@@ -68,14 +68,17 @@ class PointRecordServiceTest {
     public void testApprovePurchasePoint() {
         // given
         Long userId = 1L;
+        int amount = 1000;
+        int point = 100;
         String pgToken = "test-pg-token";
         Users user = createUser();
+        int prePoint = user.getPoint();
 
-        PayApproveInfoResponse.Amount mockAmount = new PayApproveInfoResponse.Amount(
-                1000, 0, 0, 0, 0, 0);
+                PayApproveInfoResponse.Amount mockAmount = new PayApproveInfoResponse.Amount(
+                amount, 0, 0, 0, 0, 0);
         PayApproveInfoResponse mockApproveResponse = new PayApproveInfoResponse(
                 "test-aid", "test-tid", "test-cid", "order-123", "user-123",
-                "item-name", 1, mockAmount, "CARD", "2024-11-05T10:00:00", "2024-11-05T10:05:00"
+                "item-name", 100, mockAmount, "CARD", "2024-11-05T10:00:00", "2024-11-05T10:05:00"
         );
 
         when(userReaderService.getUserById(userId)).thenReturn(user);
@@ -87,7 +90,7 @@ class PointRecordServiceTest {
 
         // then
         verify(redisPayService).deleteByUserId(userId);
-        assertThat(user.getPoint()).isEqualTo(1100);
+        assertThat(user.getPoint()).isEqualTo(prePoint + point);
     }
 
     public Users createUser(){
