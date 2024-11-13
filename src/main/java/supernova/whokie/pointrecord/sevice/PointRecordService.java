@@ -59,7 +59,7 @@ public class PointRecordService {
 
         int purchasedPoint = payApproveInfoResponse.amount().total();
         user.increasePoint(purchasedPoint);
-        PointRecord record = PointRecord.create(userId, purchasedPoint, purchasedPoint,
+        PointRecord record = PointRecord.create(userId, purchasedPoint, purchasedPoint * 10,
                 PointRecordOption.CHARGED, PointConstants.POINT_PURCHASE_MESSAGE);
         pointRecordWriterService.save(record);
 
