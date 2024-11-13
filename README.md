@@ -1,3 +1,8 @@
+# WHOKIE
+
+## 🔗 배포 주소
+https://whokie.com
+
 ## 🎯 프로젝트 목표
 
 - “타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼”을 구현
@@ -32,33 +37,19 @@
 - **GitHub Actions**: 코드 푸시 시 테스트 및 배포 자동화
 
 ## ⚠️ ISSUE
-
-### 다운
-
 - 테스트 자동화 [https://velog.io/@momnpa333/github-actionsspring-test-자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
 - https, 도메인 통합 [https://velog.io/@momnpa333/https-nginx-spring-s3-docker-로-배포하기](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
 - 성능 테스트 도입기
  [https://velog.io/@momnpa333/성능테스트-ngrinder-활용하기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
-
----
-
-### 형진
-
 - SSE
 - TestConfiguration이 SpringBootTest에서 Scan되지 않은 이유
-
-### 건
-
 - n+1 해결 시 @EntityGraph 사용  https://geonit.tistory.com/72
 - 카카오페이 api (포인트 결제)  https://geonit.tistory.com/71
-
-### 승욱
-
 - Redisson 분산락을 통한 동시성 제어  https://yso8296.tistory.com/29
 - @Async를 이용한 비동기 처리 https://yso8296.tistory.com/28
 
 ## 🏗 시스템 아키텍쳐
-<img width="702" alt="image" src="https://github.com/user-attachments/assets/ed44a2bf-c2e4-4442-906f-6a2c23a47ea0">
+<img width="689" alt="image" src="https://github.com/user-attachments/assets/84f81964-df7f-46af-9983-a5cbc2ec8a62">
 
 ## 🔄 프로젝트 구조 변경안
 
@@ -142,4 +133,3 @@
 - 이슈 발생 시 문서화
 - 주2회 대면 팀미팅을 통해 코드 리뷰 및 피드백
 
-## 🔗 배포 주소
