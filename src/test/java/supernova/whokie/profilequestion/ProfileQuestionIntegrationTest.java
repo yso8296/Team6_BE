@@ -1,6 +1,8 @@
 package supernova.whokie.profilequestion;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,27 +83,49 @@ public class ProfileQuestionIntegrationTest {
         // then
     }
 
-//    @Test
-//    @DisplayName("프로필 질문 삭제 통합테스트")
-//    void deleteProfileQuestionTest() throws Exception {
-//        // given
-//        MockHttpServletRequest request = new MockHttpServletRequest();
-//        request.setAttribute("userId", "1");
-//
-//        Long userId = 1L;
-//
-//        // when
-//        mockMvc.perform(delete("/api/profile/question/1")
-//                .requestAttr("userId", userId)
-//                .requestAttr("role", "USER")
-//                .contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(status().isOk())
-//            .andExpect(jsonPath("$.message").value("삭제가 완료되었습니다."))
-//            .andDo(result -> {
-//                System.out.println(result.getResponse().getContentAsString());
-//            });
-//
-//    }
+    @Test
+    @DisplayName("프로필 질문 삭제 통합테스트")
+    void deleteProfileQuestionTest() throws Exception {
+        // given
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setAttribute("userId", "1");
+
+        Long userId = 1L;
+
+        // when
+        mockMvc.perform(delete("/api/profile/question/1")
+                .requestAttr("userId", "1")
+                .requestAttr("role", "USER")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("삭제가 완료되었습니다."))
+            .andDo(result -> {
+                System.out.println(result.getResponse().getContentAsString());
+            });
+
+    }
+
+    @Test
+    @DisplayName("프로필 질문 생성 통합테스트")
+    void createProfileQuestionTest() throws Exception {
+        // given
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setAttribute("userId", "1");
+
+        String requestBody = String.format("{\"content\": %d}", 1);
+
+        // when
+        mockMvc.perform(post("/api/profile/question")
+                .requestAttr("userId", "1")
+                .requestAttr("role", "USER")
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("질문이 등록되었습니다."))
+            .andDo(result -> {
+                System.out.println(result.getResponse().getContentAsString());
+            });
+    }
 
     private Users createUser(int index) {
         Users user = Users.builder()
