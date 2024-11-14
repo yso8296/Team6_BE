@@ -672,9 +672,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
 # 4. 프로젝트 이슈
-- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
-- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
-- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [코드 안정성을 위한 테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
+- [보안을 위한 https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
+- [특정 api 효율성 확인을 위한 성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
 - [실시간 웹 알림 기능을 구현하기 위해 SSE를 사용한 이유 및 Nginx를 통한 배포에서 발생한 이슈](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
 - [EmbeddedRedis를 TestConfiguration으로 설정했을 때 SpringBootTest에서 Scan되지 않은 이슈](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
 - [페이징에 대한 n+1 문제 해결 시 Fetch Join을 사용하면 메모리 과부하 현상이 발생할 가능성이 있기 때문에 @EntityGraph을 사용하여 효율적인 해결](https://geonit.tistory.com/72)
