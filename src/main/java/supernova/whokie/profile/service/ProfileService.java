@@ -24,7 +24,7 @@ public class ProfileService {
     private final ApplicationEventPublisher eventPublisher;
     private final S3Service s3Service;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProfileModel.Info getProfile(Long userId, String visitorIp) {
         Profile profile = profileReaderService.getByUserId(userId);
         String imageUrl = profile.getUsers().getImageUrl();
