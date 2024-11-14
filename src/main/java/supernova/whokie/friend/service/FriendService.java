@@ -1,5 +1,6 @@
 package supernova.whokie.friend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,9 @@ public class FriendService {
         String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(userId);
         List<KakaoDto.Profile> profiles = apiCaller.getKakaoFriends(accessToken).elements();
         System.out.println(profiles);
+        if (profiles == null) {
+            return new ArrayList<>();
+        }
         List<Long> kakaoId = profiles.stream().map(KakaoDto.Profile::id).toList();
         List<Users> friendUsers = userReaderService.getUserListByKakaoIdIn(kakaoId);
 
