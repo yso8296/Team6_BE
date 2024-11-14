@@ -11,9 +11,10 @@ https://github.com/user-attachments/assets/6d708a1a-8909-48ab-9969-1301c9bf743a
 <br />
 
 타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼
+### [👉🏻 Whokie 사용 설명서 보기 👈🏻](https://petal-balaur-9dc.notion.site/Whokie-13e7e96b7e4980798b33e9563846b39d?pvs=74)
 
-### [🔗Whokie 바로가기](https://whokie.com/)
-
+### [🔗Whokie 바로가기](https://whokie.com/invite/22?invite-code=-LehblvpbJlrnuk9Ogsp_XFfTv8EJjEihMSDYBgltUmyqNpN1MmoayYDm_loDxc8SH3h7s_Bezf3CxVwDpaqfA%3D%3D)
+(혼자 사용하기에 사용 가능한 기능이 별로 없습니다! 최소 2명 이상이 테스트 하시길 권장드립니다!)
 
 Whokie와 함께 진정한 나를 알아가보자!
 <br/>
@@ -28,6 +29,7 @@ Whokie와 함께 진정한 나를 알아가보자!
 - [1. Whokie 서비스 소개](#1-whokie-소개)
   - [👉🏻 Whokie 사용 설명서 👈🏻](#-whokie-사용-설명서-보기-)
 - [2. 프로젝트 소개](#2-프로젝트-소개)
+  - [🚀 배포 링크](#-배포-링크)  
   - [👋🏻 팀원 소개](#-팀원-소개)
   - [🗓️ 개발 기간](#%EF%B8%8F-개발-기간)
   - [🏃 프로젝트 개요](#-프로젝트-개요)
@@ -78,6 +80,13 @@ Whokie와 함께 진정한 나를 알아가보자!
 <br />
 
 # 2. 프로젝트 소개
+
+## 🚀 배포 링크
+
+|BE|https://whokie.com/api/|
+|:--:|:---:|
+|FE|https://whokie.com/|
+
 ## 👋🏻 팀원 소개
 
 <div align="center">
