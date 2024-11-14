@@ -220,6 +220,7 @@ github-actions를 통해 배포자동화 수행
 **테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록**
 <img width="856" alt="image" src="https://github.com/user-attachments/assets/c6cfecb8-92a9-4126-9bf0-6086ee49f2de">
 <img width="853" alt="image" src="https://github.com/user-attachments/assets/eff8a316-0ff0-4eb9-a7e9-66918c9ccac9">
+
 테스트가 실패할 시 실패한 코드 라인에 check 코멘트를 달아줆으로서 pr을 날릴때 바로 피드백을 받아볼수 있게 작성
 
 
@@ -541,12 +542,18 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 여러 사용자가 동시에 프로필에 접근하는 상황을 시뮬레이션한 결과, 일부 요청이 누락되거나 중복 처리되어 조회수 증가가 정확히 반영되지 않은 모습을 확인할 수 있다. 이를 통해 현재의 RedissonLock을 적용하지 않은 경우 다수의 동시 접근 상황에서 기대한 만큼 안정적으로 작동하지 않음을 확인할 수 있다.
 </details>
 
-
-
-<br />
 # 4. 프로젝트 이슈
+- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
+- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
+- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [실시간 웹 알림 기능을 구현하기 위해 SSE를 사용한 이유 및 Nginx를 통한 배포에서 발생한 이슈](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
+- [EmbeddedRedis를 TestConfiguration으로 설정했을 때 SpringBootTest에서 Scan되지 않은 이슈](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+- [페이징에 대한 n+1 문제 해결 시 Fetch Join을 사용하면 메모리 과부하 현상이 발생할 가능성이 있기 때문에 @EntityGraph을 사용하여 효율적인 해결](https://geonit.tistory.com/72)
+- [결제 기능을 위해 카카오페이 디벨로퍼스 API를 활용하여 구현](https://geonit.tistory.com/71)
+- [Redisson 분산 락을 이용한 일일 방문자 수와 총 방문자 수 증가 로직에 대한 동시성 제어](https://yso8296.tistory.com/29)
+- [프로필 배경 이미지를 S3에 업로드하는 과정의 API 응답속도 지연을 개선하기 위한 @Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
 
-# 4. 프로젝트 구성
+# 5. 프로젝트 구성
 ## 🛠️ 기술 스택
 ### FE
 <img width="613" alt="image" src="https://github.com/user-attachments/assets/bee5daa4-8922-4c4a-9504-c7a6e8eb6748">
@@ -560,6 +567,9 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 
 ### BE
 ![제목 없는 다이어그램 drawio (3) (1)](https://github.com/user-attachments/assets/93417d97-904f-4c2f-8e3e-9010fb51112e)
+|Java v21|MYSQL v8.0|Spring v3.3.3|Docker v27.3.1|
+|Redis v7.1.0|h2 v2.2.224|redisson v3.33.0|nginx v1.24.0|
+
 
 
 ## 🏛️ 아키텍처
