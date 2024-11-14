@@ -24,4 +24,11 @@ public class ProfileVisitReadService {
         return RedisCommand.Visited.from(visitCount);
     }
 
+
+    @Transactional(readOnly = true)
+    public ProfileVisitCount findVisitCountBasdayId(Long hostId) {
+        return profileVisitCountRepository.findByHostId(hostId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(MessageConstants.USER_NOT_FOUND_MESSAGE));
+    }
 }

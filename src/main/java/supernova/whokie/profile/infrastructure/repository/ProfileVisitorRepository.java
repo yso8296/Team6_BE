@@ -10,4 +10,6 @@ public interface ProfileVisitorRepository extends JpaRepository<ProfileVisitor, 
     boolean existsByHostIdAndVisitorIpAndModifiedAtBetween(
             Long hostId, String visitorIp, LocalDateTime start, LocalDateTime end
     );
+
+    boolean existsByHostIdAndVisitorIp(Long hostId, String visitorIp);
 }
