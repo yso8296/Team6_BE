@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/6d708a1a-8909-48ab-9969-1301c9bf743a
 타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼
 
 ### [🔗Whokie 바로가기](https://whokie.com/invite/22?invite-code=-LehblvpbJlrnuk9Ogsp_XFfTv8EJjEihMSDYBgltUmyqNpN1MmoayYDm_loDxc8SH3h7s_Bezf3CxVwDpaqfA%3D%3D)
-
+(혼자 사용하기에 쓸 수 있는 기능이 별로 없습니다. 최소 2명 이상이 테스트 하시길 권장드립니다.)
 
 Whokie와 함께 진정한 나를 알아가보자!
 <br/>
