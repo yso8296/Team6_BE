@@ -101,6 +101,9 @@ Whokie 사용 설명서 링크
 <img width="706" alt="image" src="https://github.com/user-attachments/assets/e396eeeb-bb66-4a74-b87d-9ba7bbb5578a">
 
 ### 테스트 
+* 테스트 커버리지
+![image](https://github.com/user-attachments/assets/d62e2c49-3d52-40dd-9c4a-97517e14dd39)
+
 ## 🛠 기술 스택
 
 ### 프로젝트 기술 스택
