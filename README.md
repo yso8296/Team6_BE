@@ -198,8 +198,194 @@ MTT(응답 대기 시간)(274.9ms→186.5ms)로 성능을 개선함
 </details>
 
 <details>
-  <summary>첫번째토글</summary>
-  <!-- 내용 -->
+  <summary>PR/머지 시 자동화된 테스트를 통한 코드 안정성 증가</summary>
+  
+  (https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
+
+## 도입 계기
+
+프로젝트 테크 리더를 수행하면서 팀원들의 코드를 머지하고, 리뷰하는 일이 많아졌다. issue 브랜치를 week별 브랜치에 머지할때 실제로 팀원들의 코드가 제대로 동작하는지 일일이 빌드하기에는 시간요소가 많이 들었다. 또한 테스트 코드가 터지는지 일일이 돌리는 것도 시간이 너무 많이 들어서 해결책을 찾아야 했다.
+
+## 해결책
+
+github-actions를 통해 배포자동화 수행
+
+### 기대 효과
+
+테스트를 자동화하면서 팀원간 협업할 때 코드리뷰와 머지할때 드는 리소스를 상당부분 줄일 수 있었다. 특히 팀원의 코드가 제대로 작성이 된것인지 바로바로 알기때문에 안정성 면에서 효과를 많이 보았던 것 같다.
+
+**테스트 결과를 PR에 코멘트로 등록**
+<img width="838" alt="image" src="https://github.com/user-attachments/assets/259c449f-bbf7-4c6d-869e-6a09f34979df">
+
+**테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록**
+<img width="856" alt="image" src="https://github.com/user-attachments/assets/c6cfecb8-92a9-4126-9bf0-6086ee49f2de">
+<img width="853" alt="image" src="https://github.com/user-attachments/assets/eff8a316-0ff0-4eb9-a7e9-66918c9ccac9">
+테스트가 실패할 시 실패한 코드 라인에 check 코멘트를 달아줆으로서 pr을 날릴때 바로 피드백을 받아볼수 있게 작성
+
+
+</details>
+
+<details>
+  <summary>Nginx의 Reversed-Proxy, Certbot을 활용하여 SSL 인증서 관리</summary>
+  관련 이슈: (https://velog.io/@momnpa333/https-nginx-spring-s3-docker-로-배포하기)
+</details>
+
+<details>
+  <summary>JWT기반 로그인 인증/인가</summary>
+  
+  **인증:** 사용자가 로그인할 때 JWT ACCESS TOKEN을 생성하여 사용자 정보를 담고, 이를 통해 인증 상태를 유지한다. 이후 요청 시 생성된 ACCESS TOKEN은 Authorization 헤더에 BEARER 토큰 형식으로 전달된다. 인터셉터를 통해 인증이 필요한 요청이 들어올 경우, ACCESS TOKEN을 확인하여 유효한 사용자임을 검증한다.
+
+**인가:** 관리자 페이지 접근 시 JWT 토큰의 Role 정보를 확인하여 ADMIN 권한을 가진 사용자만 접근할 수 있도록 인가 처리를 적용함. 이를 통해 권한이 없는 사용자가 관리자 페이지에 접근하는 것을 방지함.
+</details>
+
+<details>
+  <summary>N+1 문제 해결 통한 조회 성능 최적화</summary>
+  <h3>1. 페이징 n+1 문제 해결 이슈</h3>
+
+관련 이슈 : https://geonit.tistory.com/71
+
+**문제 상황**
+
+- N+1 문제는 연관 관계가 있는 엔티티를 조회할 때 발생하는 성능 이슈
+- Page 형태로 반환하는 레포지토리 메서드에서 Fetch Join 사용 시, JPA가 메모리에서 페이징을 처리하여 메모리 과부화 현상 발생 위험
+
+**해결 방안**
+
+- 페이징이 필요한 조회 메서드에 @EntityGraph를 적용
+- 메모리 효율성을 유지하면서도 N+1 문제를 해결하여 쿼리 성능 개선
+- JPA가 메모리에서 페이징 처리하는 것을 방지하고 DB 단에서 페이징이 처리되도록 개선
+
+**EntityGraph 성능 테스트 분석**
+
+**초기 가설**
+EntityGraph 적용이 성능 향상에 도움이 될 것이라 예상
+
+```java
+    @EntityGraph(attributePaths = {"picked"})
+    @Query("SELECT p FROM Answer p WHERE p.picked = :user AND p.createdAt BETWEEN :startDate AND :endDate ORDER BY p.createdAt DESC")
+    Page<Answer> findAllByPickedAndCreatedAtBetween(Pageable pageable, @Param("user") Users user, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+```
+
+**테스트 환경**
+
+- Answer 데이터 수: 5,000개
+- 페이지 size: 3,000개
+- 측정 지표: TPS, MTT
+
+**테스트 결과**
+
+1. 일반 Join
+<img width="853" alt="image" src="https://github.com/user-attachments/assets/ac17c87d-2263-4e5a-abd3-296416ed39e4">
+
+
+- TPS(초당 처리량)c: 21.7/sec
+- MTT(하나 처리하는 데 걸리는 시간): 441.3ms
+1. EntityGraph 적용
+<img width="854" alt="image" src="https://github.com/user-attachments/assets/f27671cd-9c8e-49dc-949d-8c2c0b952130">
+
+
+- TPS(초당 처리량): 15.1/sec (일반 Join보다 **약 30%** 성능 저하 발생)
+- MTT(하나 처리하는 데 걸리는 시간): 691.1ms(일반 Join보다 **약 57%** 성능 저하 발생)
+
+**원인 분석**
+
+```java
+   @Transactional(readOnly = true)
+    public Page<AnswerModel.Record> getAnswerRecord(Pageable pageable, Long userId, LocalDate date) {
+        Users user = userReaderService.getUserById(userId);
+
+        LocalDateTime startDate;
+        LocalDateTime endDate;
+
+        if (date == null) {
+            startDate = AnswerConstants.DEFAULT_START_DATE;
+            endDate = LocalDateTime.now();
+        } else {
+            startDate = date.withDayOfMonth(1).atStartOfDay();
+            endDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
+        }
+
+        // 지정된 기간 내의 데이터를 조회
+        Page<Answer> answers = answerReaderService.getAnswerList(pageable, user, startDate, endDate);
+        return answers.map(AnswerModel.Record::from);
+    }
+```
+
+1. @Transactional(readOnly = true) 적용으로 영속성 컨텍스트 유지
+2. 조회 대상 user가 트랜잭션 내에서 고정값으로 사용
+3. EntityGraph로 인한 불필요한 JOIN 연산 발생으로 오히려 성능이 더 느린 현상이 발생한 것으로 예상
+
+**결론**
+영속성 컨텍스트에 캐시된 데이터를 사용하는 상황에서는 EntityGraph 적용이 오히려 성능 저하를 초래할 수 있음을 확인함. 이는 불필요한 JOIN 연산이 추가되기 때문으로 예상함.
+
+1. **실제 Fetch Join 성능 테스트 이슈**
+
+"Fetch Join이 실제로 성능에 얼마나 영향을 미칠까?"라는 궁금증에서 시작한 성능 테스트를 진행하였음. 그룹 멤버 조회 API를 대상으로 일반 Join과 Fetch Join의 성능 차이를 비교 분석했음.
+
+**예상 시나리오** (그룹 멤버 10명 기준)
+
+- 일반 Join: 1(그룹 조회) + 10(멤버별 user 조회) = 총 11번의 쿼리 실행 예상
+- Fetch Join: 단 1번의 쿼리로 모든 데이터 조회 가능
+
+**테스트 대상 쿼리**
+
+- 그룹 내 멤버 조회 API (그룹 ID로 멤버 목록 조회)
+
+```java
+    @Query("SELECT g FROM GroupMember g JOIN FETCH g.user WHERE g.user.id != :userId AND g.group.id = :groupId")
+    List<GroupMember> getGroupMemberJoinFetch(@Param("userId") Long userId, @Param("groupId") Long groupId);
+```
+
+- user 엔티티와의 연관 관계에서 N+1 문제 발생
+
+**성능 테스트 결과**
+
+1. 일반 Join 사용 시
+<img width="855" alt="image" src="https://github.com/user-attachments/assets/f13a7980-d877-43dd-b876-d81aade993bb">
+
+- TPS(초당 처리량): 98.0/sec
+- MTT(하나 처리하는데 걸리는 시간) : 1035.2ms
+- N+1 문제로 인한 추가 쿼리 발생
+1. Fetch Join 적용 시
+<img width="854" alt="image" src="https://github.com/user-attachments/assets/bc512ac9-3152-4df1-acb1-b67b5cf95fa1">
+
+    
+- TPS(초당 처리량): 282.0/sec(일반 Join에 비해 **약 288% 성능 향상**)
+- MTT(하나 처리하는데 걸리는 시간) : 345.2ms (일반 Join에 비해 **약 300% 시간** 감축)
+- 단일 쿼리로 데이터 조회 완료
+
+**결론**: 실제 테스트 결과, Fetch Join 적용으로 N+1 문제를 해결하여 **약 2.9배**의 성능 향상을 확인할 수 있었음. 이를 통해 Fetch Join이 실제 서비스에서도 상당한 성능 개선 효과를 가져올 수 있음을 예상함.
+</details>
+
+<details>
+  <summary>관리자 페이지를 통한 사용자, 그룹, 질문 등의 효율적 데이터 관리</summary>
+  <img width="850" alt="image" src="https://github.com/user-attachments/assets/8ebd37db-6e1f-4729-9f52-2408f45d43f3">
+  
+  **문제 상황**
+
+- 프론트엔드에서 DB를 직접 조작하는 안티패턴 발생
+- 프론트엔드에서 DB를 직접 알게 되는 문제점 발생
+
+**해결 방안**
+
+- 관리자 전용 페이지를 구현하여 DB 조작을 백엔드단에서 처리하는 것으로 제한
+- 관리자 페이지에서 공통 질문을 직접 등록/수정할 수 있는 인터페이스 제공
+- 사용자, 그룹, 유저 목록을 한눈에 볼 수 있는 대시보드 형태의 UI 구현으로 효율적인 데이터 관리 가능
+
+</details>
+
+<details>
+  <summary>카카오페이 api를 사용하여 결제 기능 구현 </summary>
+  관련 이슈 링크 : https://geonit.tistory.com/72
+
+**문제 상황**
+
+- 포인트 결제을 위한 간단하고 쉽게 접근할 수 있는 사용자 친화적인 결제 시스템 필요
+
+**해결 방안**
+
+- QR코드나 전화번호로 간편하게 결제할 수 있는 카카오페이 API 도입
+- https://developers.kakaopay.com/ 카카오페이 디벨로퍼스 공식 문서를 참조하여 단건 결제 기능을 구현
 </details>
 
 <details>
@@ -208,9 +394,153 @@ MTT(응답 대기 시간)(274.9ms→186.5ms)로 성능을 개선함
 </details>
 
 <details>
-  <summary>첫번째토글</summary>
+  <summary>SSE를 활용하여 클라이언트에게 실시간 알림 이벤트 발행</summary>
   <!-- 내용 -->
+  관련 이슈: https://velog.io/@hjinshin/웹-알림-구현
+  
+
+**이슈 요약**
+
+- 핵심 서비스인 칭찬을 받았을 경우 대상자에게 실시간으로 전달하기를 희망
+- polling, websocket, webhook과 비교하였을 때 SSE가 서버에서 발생하는 이벤트를 클라이언트에게 전달하기에 적합하다고 판단
+    - polling: 지속적인 요청으로 서버 리소스 낭비
+    - websocket: 단방향 통신만 필요하기에 양방향 통신을 지원하는 websocket은 부적합
+    - webhook: 서버에서 post 요청을 보내기 때문에 클라이언트에 endpoint가 존재해야함
 </details>
+
+<details>
+  <summary>비동기 처리를 통해 응답 속도 향상</summary>
+  
+  **문제사항:** 프로필 배경 이미지를 S3에 업로드하는 과정에서 업로드 시간이 길어지면서 전체 API 응답이 지연됨. 사용자가 프로필 배경을 수정할 때마다 이미지 업로드 시간이 API 응답 시간에 그대로 반영되어 사용자 경험이 저하되는 문제가 발생함
+
+**해결 방안:** 이미지 업로드 작업을 @Async 어노테이션을 사용해 비동기 처리하도록 구현하여, API의 주요 로직이 완료된 후에도 이미지 업로드가 백그라운드에서 진행되도록 함. 이를 통해 사용자 요청에 대한 API 응답 속도가 향상되며, 업로드 과정이 API 응답을 지연시키지 않도록 하여 보다 빠른 사용자 경험을 제공함.
+
+관련 이슈:  https://yso8296.tistory.com/28
+
+<img width="855" alt="image" src="https://github.com/user-attachments/assets/fb6f9a50-d885-4ec2-a3b3-fdd4668ddb42">
+
+<img width="855" alt="image" src="https://github.com/user-attachments/assets/e3ab27b3-acc4-4098-a663-ae731f3e9109">
+
+image를 저장하는 api의 경우(약 1000번 요청 시도)
+
+TPS(초당 처리량)(14.4→20.9) : 비동기를 적용하기 전 TPS의 경우 14.4의 측정치를 보여주었음. 이후 비동기 방식을 적용하여 TPS를 20.9로 향상시킴
+
+MTT(응답 대기 시간)(274.9ms→186.5ms): 비동기를 적용하기 전 약 274.9ms가 응답시간이 걸리던 api 요청을 비동기 방식을 적용하여 186.5ms 로 응답시간을 감소시킴.
+
+</details>
+
+<details>
+  <summary>Redisson Lock 및 동시성 제어</summary>
+  **문제사항:** 여러 사용자가 동시에 프로필을 조회할 경우, 일일 방문자 수와 총 방문자 수 증가 로직에서 동시성 문제가 발생하여 조회수가 정확하게 반영되지 않는 문제가 발생함. 이로 인해 실제 방문자 수와 조회된 방문자 수 간의 불일치가 발생함.
+
+**해결 방안:** Redisson 분산 락을 활용하여 다수의 사용자가 동시에 프로필을 조회할 때도 정확한 조회수 증가가 이루어지도록 동시성 제어를 적용함. 이를 통해 각 조회 요청에 대해 일관된 방문자 수가 반영되며, 조회수 기록의 정확성을 보장할 수 있게 됨.
+
+관련 이슈: https://yso8296.tistory.com/29
+
+**동시성 테스트 결과**:
+
+동시성 테스트 코드 - 100개의 스레드를 만든 후 조회수 증가 로직에 대한 동시 접근 테스트
+
+```java
+@Test
+    @DisplayName("동시 방문자 수 증가 테스트")
+    void visitProfileConcurrentlyTest() throws InterruptedException {
+        // given
+        RedisVisitCount redisVisitCount = createVisitCount();
+        Long hostId = redisVisitCount.getHostId();
+        String visitorIp = "visitorIp";
+        int oldDailyVisited = redisVisitCount.getDailyVisited();
+        int oldTotalVisited = redisVisitCount.getTotalVisited();
+
+        int threadCount = 100; // 스레드 개수
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    redisVisitService.visitProfile(hostId, visitorIp + finalI);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+        latch.await();
+        executorService.shutdown();
+
+        // then
+        RedisVisitCount actual = redisVisitCountRepository.findById(hostId).orElseThrow();
+
+        assertAll(
+            () -> assertThat(actual.getDailyVisited()).isEqualTo(oldDailyVisited + threadCount),
+            () -> assertThat(actual.getTotalVisited()).isEqualTo(oldTotalVisited + threadCount)
+        );
+    }
+```
+
+1. **RedissonLock을 적용한 경우**
+
+```java
+ @RedissonLock(value = "#hostId")
+    public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
+        RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
+        log.info("visitorIp: {}", visitorIp);
+        if(!checkVisited(hostId, visitorIp)) {
+            redisVisitCount.visit();
+            redisVisitCountRepository.save(redisVisitCount);
+        }
+        // 방문자 로그 기록
+        saveVisitor(hostId, visitorIp);
+
+        return redisVisitCount;
+    }
+```
+
+<img width="331" alt="image" src="https://github.com/user-attachments/assets/a193995a-f9ea-4a7e-b2c3-d8ec184e2599">
+
+
+예상 결과: 일일 방문자 수: 100, 총 방문자 수: 110
+
+실제 결과: 일일 방문자 수: 100, 총 방문자 수: 110
+
+테스트 결과: 
+
+여러 사용자가 동시에 프로필에 접근하는 상황을 시뮬레이션한 후, Redisson 분산 락을 이용해 동시성 제어를 적용한 결과, 예상한 대로 일일 방문자 수와 총 방문자 수가 각각 100씩 증가하는 것을 확인할 수 있다. 이를 통해 동시 접근 상황에서도 방문자 수 증가 로직이 안정적으로 작동함을 확인할 수 있었습니다.
+
+1. **RedissonLock을 적용하지 않은 경우**
+
+```java
+public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
+        RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
+        log.info("visitorIp: {}", visitorIp);
+        if(!checkVisited(hostId, visitorIp)) {
+            redisVisitCount.visit();
+            redisVisitCountRepository.save(redisVisitCount);
+        }
+        // 방문자 로그 기록
+        saveVisitor(hostId, visitorIp);
+
+        return redisVisitCount;
+    }
+```
+
+<img width="363" alt="image" src="https://github.com/user-attachments/assets/cbb5297f-b9d3-47e7-bf22-367e17dc0c04">
+
+<img width="790" alt="image" src="https://github.com/user-attachments/assets/195e6b8d-cf0b-4b37-a617-ed8d0fa3698a">
+
+예상 결과: 일일 방문자 수: 100, 총 방문자 수: 110
+
+실제 결과: 일일 방문자 수: 10, 총 방문자 수: 20
+
+테스트 결과: 
+
+여러 사용자가 동시에 프로필에 접근하는 상황을 시뮬레이션한 결과, 일부 요청이 누락되거나 중복 처리되어 조회수 증가가 정확히 반영되지 않은 모습을 확인할 수 있다. 이를 통해 현재의 RedissonLock을 적용하지 않은 경우 다수의 동시 접근 상황에서 기대한 만큼 안정적으로 작동하지 않음을 확인할 수 있다.
+</details>
+
 
 
 <br />
