@@ -181,8 +181,19 @@ MTT(응답 대기 시간)(274.9ms→186.5ms)로 성능을 개선함
 </details>
 
 <details>
-  <summary>첫번째토글</summary>
-  <!-- 내용 -->
+  <summary>단위 테스트 및 통합 테스트 작성</summary>
+### 문제사항
+
+1. 4명이서 프로젝트를 진행하다 보니, 남이 짠 코드가 제대로 돌아가는지 매번확인해야할 필요성이 생겼다.
+2. 리팩토링을 하는 과정에서 리팩토링 후에도 제대로 코드가 돌아가는지 확인하는 작업이 필요했다.
+
+### 해결방안
+
+1. 테스트 코드를 만들어 안정성을 증가시킨다.
+
+테스트 커버리지를 54%로 끌어올렸다. 가장 많이 쓰이고 있는 api인 answer와 profileanswer의 경우 메서드 기준으로 96%, 100%로 올려 안정성을 더했다.
+<img width="847" alt="image" src="https://github.com/user-attachments/assets/c8c7c7c1-577b-483b-8f29-30bc244d2203">
+
 </details>
 
 <details>
