@@ -1,10 +1,9 @@
-package supernova.whokie.group.service;
+package supernova.whokie.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import supernova.whokie.group.Groups;
 
 public class GroupDomainTest {
 
