@@ -98,11 +98,7 @@ class AnswerIntegrationTest {
                         .requestAttr("role", "USER")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.users").isArray())
-                .andDo(result -> {
-                    String responseContent = result.getResponse().getContentAsString();
-                    System.out.println("users 내용: " + responseContent);
-                });
+                .andExpect(jsonPath("$.users").isArray());
 
     }
 
@@ -162,11 +158,7 @@ class AnswerIntegrationTest {
                 .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(10))
                 .andExpect(jsonPath("$.totalPages").value(1))
-                .andExpect(jsonPath("$.totalElements").value(5))
-                .andDo(result -> {
-                    String responseContent = result.getResponse().getContentAsString();
-                    System.out.println("전체 질문 기록 내용: " + responseContent);
-                });
+                .andExpect(jsonPath("$.totalElements").value(5));
     }
 
     @Test
@@ -183,11 +175,7 @@ class AnswerIntegrationTest {
                 .andExpect(jsonPath("$.hints.length()").value(3))
                 .andExpect(jsonPath("$.hints[0].valid").value(true))
                 .andExpect(jsonPath("$.hints[1].valid").value(true))
-                .andExpect(jsonPath("$.hints[2].valid").value(false))
-                .andDo(result -> {
-                    String responseContent = result.getResponse().getContentAsString();
-                    System.out.println("Hints 내용: " + responseContent);
-                });
+                .andExpect(jsonPath("$.hints[2].valid").value(false));
     }
 
     @Test
@@ -207,11 +195,7 @@ class AnswerIntegrationTest {
                         .requestAttr("userId", "1")
                         .requestAttr("role", "USER"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("힌트를 성공적으로 구매하였습니다!"))
-                .andDo(result -> {
-                    String responseContent = result.getResponse().getContentAsString();
-                    System.out.println("구매 응답 내용: " + responseContent);
-                });
+                .andExpect(jsonPath("$.message").value("힌트를 성공적으로 구매하였습니다!"));
 
         //유저 포인트 감소 확인
         Users userAfterPurchase = userRepository.findById(userId).orElseThrow();
@@ -237,11 +221,7 @@ class AnswerIntegrationTest {
                         .requestAttr("userId", "1")
                         .requestAttr("role", "USER"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("그룹 질문 답변 완료"))
-                .andDo(result -> {
-                    String responseContent = result.getResponse().getContentAsString();
-                    System.out.println("그룹 질문 답변 내용: " + responseContent);
-                });
+                .andExpect(jsonPath("$.message").value("그룹 질문 답변 완료"));
 
         Users userAfterAnswer = userRepository.findById(userId).orElseThrow();
         int finalPoint = userAfterAnswer.getPoint();
