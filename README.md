@@ -71,8 +71,9 @@ Whokie 사용 설명서 링크
 - [EmbeddedRedis를 TestConfiguration으로 설정했을 때 SpringBootTest에서 Scan되지 않은 이슈](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
 - [페이징에 대한 n+1 문제 해결 시 Fetch Join을 사용하면 메모리 과부하 현상이 발생할 가능성이 있기 때문에 @EntityGraph을 사용하여 효율적인 해결](https://geonit.tistory.com/72)
 - [결제 기능을 위해 카카오페이 디벨로퍼스 API를 활용하여 구현](https://geonit.tistory.com/71)
-- [Redisson 분산락을 통한 동시성 제어](https://yso8296.tistory.com/29)
-- [@Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
+- [Redisson 분산 락을 이용한 일일 방문자 수와 총 방문자 수 증가 로직에 대한 동시성 제어](https://yso8296.tistory.com/29)
+- [프로필 배경 이미지를 S3에 업로드하는 과정의 API 응답속도 지연을 개선하기 위한 @Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
+
 # 프로젝트 구성
 
 ### 기술 스택
