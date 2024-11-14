@@ -584,6 +584,91 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 여러 사용자가 동시에 프로필에 접근하는 상황을 시뮬레이션한 결과, 일부 요청이 누락되거나 중복 처리되어 조회수 증가가 정확히 반영되지 않은 모습을 확인할 수 있다. 이를 통해 현재의 RedissonLock을 적용하지 않은 경우 다수의 동시 접근 상황에서 기대한 만큼 안정적으로 작동하지 않음을 확인할 수 있다.
 </details>
 
+<details>
+  <summary>보안을 위해 CORS 막아두기</summary>
+### CORS 에러가 발생하는 경우를 알아보자.
+1. 출처가 다른 도메인 또는 포트로 리소스를 요청할 때
+CORS 정책에 따라, 출처가 다른 도메인이나 포트에서 리소스를 요청하는 경우에는 브라우저에서 CORS 에러가 발생한다. 이 경우에는 서버 측에서 Access-Control-Allow-Origin 헤더를 설정하여 요청을 허용해야 한다.
+
+2. HTTPS에서 HTTP로 리소스를 요청할 때
+보안상의 이유로 HTTPS에서 HTTP로 리소스를 요청하는 경우에도 CORS 에러가 발생할 수 있다. 이 경우에는 HTTPS로 통신하는 서버에서 HTTP로 요청을 전달하는 것이 아니라, HTTPS로 전달해야 한다.
+
+CORS를 열게되면 다른 도메인에서 서버에 요청을 보낼 때에도 응답을 하게 된다. 보안상 CORS를 닫아두는 것이 좋기 때문에 domain을 통합하여 CORS을 닫았다. 다만 dev 서버에서는 프론트와의 원활한 협업을 위해 열어 두었다.
+```
+@Configuration
+@RequiredArgsConstructor
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    private final JwtProvider jwtProvider;
+
+    @Bean
+    @Order(1)
+    public JwtInterceptor jwtInterceptor() {
+        return new JwtInterceptor(jwtProvider);
+    }
+
+    @Bean
+    @Order(2)
+    public VisitorInterceptor visitorInterceptor() {
+        return new VisitorInterceptor();
+    }
+
+    @Bean
+    @Order(3)
+    public AdminInterceptor adminInterceptor() {
+        return new AdminInterceptor(jwtProvider);
+    }
+
+    @Bean
+    public LoginUserArgumentResolver loginUserArgumentResolver() {
+        return new LoginUserArgumentResolver();
+    }
+
+    @Bean
+    public VisitorArgumentResolver visitorArgumentResolver() {
+        return new VisitorArgumentResolver();
+    }
+
+    @Bean
+    public TempUserArgumentResolver tempUserArgumentResolver() {
+        return new TempUserArgumentResolver();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwtInterceptor())
+            .addPathPatterns("/api/**");
+        registry.addInterceptor(visitorInterceptor())
+            .addPathPatterns("/api/profile/**");
+        registry.addInterceptor(adminInterceptor())
+            .addPathPatterns("/admin/**", "/api/admin/**");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(loginUserArgumentResolver());
+        resolvers.add(visitorArgumentResolver());
+        resolvers.add(tempUserArgumentResolver());
+
+    }
+
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOriginPatterns("*")
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+//                .allowedHeaders("Authorization", "Content-Type")
+//                .allowCredentials(true)
+//                .exposedHeaders("Authorization")
+//                .maxAge(3600);
+//    }
+}
+```
+
+  
+</details>
+
+
 # 4. 프로젝트 이슈
 - [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
 - [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
