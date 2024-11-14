@@ -610,8 +610,8 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 ### BE
 ![제목 없는 다이어그램 drawio (3) (1)](https://github.com/user-attachments/assets/93417d97-904f-4c2f-8e3e-9010fb51112e)
 
-|Java v21|MYSQL v8.0|Spring v3.3.3|Docker v27.3.1|Redis v7.1.0|h2 v2.2.224|redisson v3.33.0|nginx v1.24.0|
-|:-----:|:---:|:-----:|:-----:|:-----:|:---:|:-----:|:-----:|
+|Java v21|MYSQL v8.0|Spring v3.3.3|Docker v27.3.1|Redis v7.1.0|h2 v2.2.224|redisson v3.33.0|nginx v1.24.0|nGrinder v3.5.5|
+|:-----:|:---:|:-----:|:-----:|:-----:|:---:|:-----:|:-----:|:-----:|
 
 
 
