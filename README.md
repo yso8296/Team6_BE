@@ -585,7 +585,7 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 </details>
 
 <details>
-  <summary> 보안을 위해 CORS 막아두기</summary>
+  <summary>보안을 위해 CORS 막아두기</summary>
   
 ### CORS 에러가 발생하는 경우를 알아보자.
 1. 출처가 다른 도메인 또는 포트로 리소스를 요청할 때
