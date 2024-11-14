@@ -1,7 +1,58 @@
-# WHOKIE
-
 ## 🔗 배포 주소
 https://whokie.com
+---
+# WHOKIE 소개
+
+> 쿠키로 친구에게 칭찬을? 오직 Whokie에서!
+1. 🔒 **로그인 및 회원가입**
+    - 카카오 간편 로그인으로 간단하게 회원가입과 로그인이 가능해요
+    - 내 카카오 프로필과 카카오 친구들을 불러올 수 있어요
+2. 🎫 **마이페이지로 나를 보여줘요**
+    - 마이페이지는 로그인 하지 않은 사람들도 볼 수 있어요
+3. 🍪 **쿠키 주기로 친구에게 칭찬을 해요**
+    - 어떤 친구에게 쿠키를 줄 지 모르겠다면 선택지를 Reload↻ 할 수 있어요
+    - 질문에 적합한 친구가 없다면 질문을 Skip**➔** 할 수 있어요
+4. 🏅 **친구에게 랭킹을 자랑해요**
+    - 내가 쿠키 받은 질문 Top3를 보여줄 수 있어요
+    - 친구의 랭킹을 보면서 친구의 장점을 찾아봐요
+5. 💌 **실시간 쿠키 알림**
+    - 쿠키를 받으면 실시간으로 나에게 알림이 와요
+6. 🔑 **나에게 쿠키를 준 친구에 대한 힌트를 조회해요**
+    - 나에게 누가 쿠키를 줬는지 힌트를 볼 수 있어요
+    - 힌트는 세 개 까지만 제공돼요
+    - 정확한 이름과 정보는 알 수 없어요 힌트로 추측 해볼까요?
+7. 📣 **프로필 질문으로 친구들에게 물어봐요**
+    - 친구들에게 물어보고 싶은 질문은 프로필 질문으로 질문해요
+    - 친구들의 프로필 질문에 익명으로 재밌게 대답해요
+8. 🏫 **그룹에서 친구들과 함께 즐겨요**
+    - 함께 쿠키 주기를 즐기고 싶은 친구들과 그룹을 만들어요
+    - 그룹 랭킹을 보고 우리 그룹의 쿠키 왕을 노려봐요
+9. 💸 **포인트를 차곡차곡 모아봐요**
+    - 친구에게 쿠키를 주면 포인트를 모을 수 있어요
+    - 힌트가 빨리 보고 싶다면 1000원에 100포인트를 구매할 수 있어요
+  
+Whokie 사용 설명서 링크
+
+# 프로젝트 소개
+
+## 👋🏻 팀원 소개
+### BE
+|권다운|김건|신형진|유승욱|
+|:-----:|:---:|:-----:|:---:|
+|[<img src="https://github.com/momnpa333.png" width="100px">](https://github.com/momnpa333)|[<img src="https://github.com/gunGeongun.png" width="100px">](https://github.com/gunGeongun)|[<img src="https://github.com/hjinshin.png" width="100px">](https://github.com/hjinshin)|[<img src="https://github.com/yso8296.png" width="100px">](https://github.com/yso8296)|
+|테크리더|리마인더|리액셔너|기획리더|
+
+### FE
+|김아진|안희정|정솔빈|
+|:-----:|:---:|:-----:|
+|[<img src="https://github.com/ppochaco.png" width="100px">](https://github.com/ppochaco)|[<img src="https://github.com/anheejeong.png" width="100px">](https://github.com/anheejeong)|[<img src="https://github.com/solempty.png" width="100px">](https://github.com/solempty)|
+|조장|테크리더|타임키퍼|
+
+#### [🔗 1인 1역 자세히보기](https://petal-balaur-9dc.notion.site/1-1-949c39380dce416fa0fff7e11215d127)
+
+### 개발 기간
+
+- 2024.08.19~2024.11.15
 
 ## 🎯 프로젝트 목표
 
@@ -12,6 +63,44 @@ https://whokie.com
 - 실패 케이스를 고려한 견고한 테스트 작성과 높은 테스트 커버리지 유지에 중점
 - [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)를 기반으로 한 코드 컨벤션과 Git 커밋 컨벤션을 준수하여 일관성 있는 코드베이스를 유지
 
+# ⚠️ 프로젝트 이슈
+- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
+- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
+- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [SSE로 웹알림 구현](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
+- [TestConfiguration이 SpringBootTest에서 Scan되지 않은 이유](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+- [n+1 해결 시 @EntityGraph 사용](https://geonit.tistory.com/72)
+- [카카오페이 api (포인트 결제)](https://geonit.tistory.com/71)
+- [Redisson 분산락을 통한 동시성 제어](https://yso8296.tistory.com/29)
+- [@Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
+# 프로젝트 구성
+
+### 기술 스택
+
+![기술스택.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/061c6bac-6bdd-4852-9a0c-7ca1b15dbed9/70ec43de-0c17-484a-b7fc-dc296d8e7a7e/%E1%84%80%E1%85%B5%E1%84%89%E1%85%AE%E1%86%AF%E1%84%89%E1%85%B3%E1%84%90%E1%85%A2%E1%86%A8.svg)
+
+- 백엔드 기술 스택 사진 추가해주세용
+
+### 아키텍처
+
+<img width="689" alt="image" src="https://github.com/user-attachments/assets/84f81964-df7f-46af-9983-a5cbc2ec8a62">
+
+### V1. Command,Model 적용
+<img width="707" alt="image" src="https://github.com/user-attachments/assets/79d32aab-a04f-443e-b89b-d33dea8cc7ba">
+
+### V2. Service 분리
+<img width="703" alt="image" src="https://github.com/user-attachments/assets/70cc556d-ead9-4c07-ab7c-f2a99952194b">
+
+### V2.1. Event, Async 적용
+![스크린샷 2024-10-19 221305](https://github.com/user-attachments/assets/76a88b4a-8439-4220-8af7-5d3bc6f30bde)
+
+### V2.2. Redis 적용
+![스크린샷 2024-11-14 031642](https://github.com/user-attachments/assets/9d3ba974-4361-4aa8-9fde-b947bc246b73)
+
+### 📊 ERD
+<img width="706" alt="image" src="https://github.com/user-attachments/assets/e396eeeb-bb66-4a74-b87d-9ba7bbb5578a">
+
+### 테스트 
 ## 🛠 기술 스택
 
 ### 프로젝트 기술 스택
@@ -36,33 +125,6 @@ https://whokie.com
     - S3에서 정적 파일 호스팅
 - **GitHub Actions**: 코드 푸시 시 테스트 및 배포 자동화
 
-## ⚠️ ISSUE
-- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
-- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
-- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
-- [SSE로 웹알림 구현](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
-- [TestConfiguration이 SpringBootTest에서 Scan되지 않은 이유](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
-- [n+1 해결 시 @EntityGraph 사용](https://geonit.tistory.com/72)
-- [카카오페이 api (포인트 결제)](https://geonit.tistory.com/71)
-- [Redisson 분산락을 통한 동시성 제어](https://yso8296.tistory.com/29)
-- [@Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
-
-## 🏗 시스템 아키텍쳐
-<img width="689" alt="image" src="https://github.com/user-attachments/assets/84f81964-df7f-46af-9983-a5cbc2ec8a62">
-
-## 🔄 프로젝트 구조 변경안
-
-### V1. Command,Model 적용
-<img width="707" alt="image" src="https://github.com/user-attachments/assets/79d32aab-a04f-443e-b89b-d33dea8cc7ba">
-
-### V2. Service 분리
-<img width="703" alt="image" src="https://github.com/user-attachments/assets/70cc556d-ead9-4c07-ab7c-f2a99952194b">
-
-### V2.1. Event, Async 적용
-![스크린샷 2024-10-19 221305](https://github.com/user-attachments/assets/76a88b4a-8439-4220-8af7-5d3bc6f30bde)
-
-### V2.2. Redis 적용
-![스크린샷 2024-11-14 031642](https://github.com/user-attachments/assets/9d3ba974-4361-4aa8-9fde-b947bc246b73)
 
 ## 🌳 GIT 브랜치 전략
 
@@ -98,8 +160,6 @@ https://whokie.com
 - **prod** : 배포 서버에 영향을 주는 브랜치로 Master의 브랜치를 Merge
 - **review** : 현업 멘토님 코드리뷰 브랜치로 한 주 동안 작성한 기능들을 리뷰받는 브랜치
 
-## 📊 ERD
-<img width="706" alt="image" src="https://github.com/user-attachments/assets/e396eeeb-bb66-4a74-b87d-9ba7bbb5578a">
 
 ## 🧪 테스트
 
