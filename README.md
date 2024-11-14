@@ -1,9 +1,51 @@
-## 🔗 배포 주소
-https://whokie.com
----
-# WHOKIE 소개
+<div align="center">
 
-> 쿠키로 친구에게 칭찬을? 오직 Whokie에서!
+<h1>Whokie</h1>
+
+<h3>"쿠키로 친구에게 칭찬을? 오직 Whokie에서!"</h3>
+<br />
+
+https://github.com/user-attachments/assets/6d708a1a-8909-48ab-9969-1301c9bf743a
+
+
+<br />
+
+타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼
+
+### [Whokie 바로가기](https://whokie.com/)
+
+
+Whokie와 함께 진정한 나를 알아가보자!
+<br/>
+작은 칭찬이 큰 변화를 만들어내는 긍정의 선순환을 경험해보세요🎀
+
+<br/>
+
+</div>
+
+
+## 목차
+- [1. Whokie 서비스 소개](#1-whokie-소개)
+  - [👉🏻 Whokie 사용 설명서 👈🏻](#-whokie-사용-설명서-보기-)
+- [2. 프로젝트 소개](#2-프로젝트-소개)
+  - [👋🏻 팀원 소개](#-팀원-소개)
+  - [🗓️ 개발 기간](#%EF%B8%8F-개발-기간)
+  - [🏃 프로젝트 목표](#-프로젝트-목표)
+- [3. 프로젝트 중점사항](#3-be-프로젝트-이슈)
+- [4. 프로젝트 이슈](#4-be-프로젝트-이슈)
+- [5. 프로젝트 구성](#5-프로젝트-구성)
+  - [🛠️ 기술 스택](#%EF%B8%8F-기술-스택)
+  - [🏛️ 아키텍처](#%EF%B8%8F-아키텍처)
+  - [💾 ERD](#-erd)
+- [6. 개발 문화](#5-개발-문화)
+  - [💡 FE 깃허브 Project](https://github.com/orgs/kakao-tech-campus-2nd-step3/projects/3/views/1)
+  - [📏 팀 그라운드 룰](https://www.notion.so/13e7e96b7e498104925cf9e3ef479c68)
+  - [💬 커밋 컨벤션](https://www.notion.so/13e7e96b7e4981729498fe6fbd8d2bf8)
+  - [📷 팀 미팅](#-팀-미팅)
+  - [🚨 회의록](https://www.notion.so/13e7e96b7e4981ea9ce8d6e2c5e9f513)
+- [7. 링크 모음](#6-whokie를-자세히-알고-싶다면)
+
+# 1. Whokie 소개
 1. 🔒 **로그인 및 회원가입**
     - 카카오 간편 로그인으로 간단하게 회원가입과 로그인이 가능해요
     - 내 카카오 프로필과 카카오 친구들을 불러올 수 있어요
@@ -31,176 +73,213 @@ https://whokie.com
     - 친구에게 쿠키를 주면 포인트를 모을 수 있어요
     - 힌트가 빨리 보고 싶다면 1000원에 100포인트를 구매할 수 있어요
   
-Whokie 사용 설명서 링크
+### [👉🏻 Whokie 사용 설명서 보기 👈🏻](https://petal-balaur-9dc.notion.site/Whokie-13e7e96b7e4980798b33e9563846b39d?pvs=74)
 
-# 프로젝트 소개
+<br />
 
+# 2. 프로젝트 소개
 ## 👋🏻 팀원 소개
+
+<div align="center">
+
+### FE
+  
+|김아진|안희정|정솔빈|
+|:-----:|:---:|:-----:|
+|[<img src="https://github.com/ppochaco.png" width="100px">](https://github.com/ppochaco)|[<img src="https://github.com/anheejeong.png" width="100px">](https://github.com/anheejeong)|[<img src="https://github.com/solempty.png" width="100px">](https://github.com/solempty)|
+|조장|테크리더|타임키퍼|
+  
 ### BE
+  
 |권다운|김건|신형진|유승욱|
 |:-----:|:---:|:-----:|:---:|
 |[<img src="https://github.com/momnpa333.png" width="100px">](https://github.com/momnpa333)|[<img src="https://github.com/gunGeongun.png" width="100px">](https://github.com/gunGeongun)|[<img src="https://github.com/hjinshin.png" width="100px">](https://github.com/hjinshin)|[<img src="https://github.com/yso8296.png" width="100px">](https://github.com/yso8296)|
 |테크리더|리마인더|리액셔너|기획리더|
 
+### [🔗 1인 1역 자세히보기](https://petal-balaur-9dc.notion.site/1-1-949c39380dce416fa0fff7e11215d127)
+
+</div>
+
+## 🗓️ 개발 기간
+- 2024.08.19 ~ 2024.11.15
+
+## 🏃 프로젝트 개요
+
+<br />
+
+# 3. 프로젝트 중점사항
+<details>
+  <summary>Command, Model 패턴 적용을 통해 변화에 용이한 코드 구조 작성</summary>
+  <img width="852" alt="image" src="https://github.com/user-attachments/assets/0afd2054-9803-44cc-9627-357b46d56e6f">
+    
+### 문제점
+1. service 패키지에서 controller안에 있는 dto(request, response)를 알고 있음
+2. controller가 service를 알고 service또한 controller 패키지를 알게되는 상황 발생
+3. request가 client에서 controller로 데이터를 넘겨주는 역할과 controller에서 service로 데이터를 넘겨주는 역할 2가지를 하게됨
+4. request나 response가 변할때 마다 service와 controller 두곳의 코드가 계속 변경됨
+
+### 실제 상황
+1. front에서 request를 변경해달라는 요청
+2. request를 변경하는 순간 controller 뿐만 아니라 service 코드가 변경
+3. service관련 test 코드 까지 바꿔야 하는 상황 발생
+
+### 해결방안
+1. service 와 controller 사이에 dto 제작
+2. service 패키지에 dto(command,model) 제작
+
+### 기대 효과
+1. service가 controller 패키지를 모르게 구현 가능
+2. request, response가 변화할시 controller단 안에서 만 수정하고 service코드는 수정이 필요없음
+3. 변화에 유연하게 대처 가능
+
+</details>
+
+<details>
+  <summary>Service Layer 분리를 통해 순환 참조 가능성 제거</summary>
+  <img width="849" alt="image" src="https://github.com/user-attachments/assets/4ebf03dc-649a-4d1e-83a5-f9a3e4079852">
+
+### 문제점
+1. AService에서 BService가 만든 메서드가 필요한 상황 발생
+2. AService에서 BService의 메서드를 사용하면 순환참조 오류 발생가능성 발생
+3. Service가 Reader,Writer에 관련된 모든 메서드를 갖고있으니 service가 비대해지는 문제 발생
+4. 프로젝트가 커질수록 service가 다른 service를 알면 편해지는 로직이 증가함
+
+### 해결방안
+1. service를 Reader,Writer Service로 분리
+2. MainService를 두어 MainService는 Reader와 Writer Service를 통해서만 로직 구현
+3. Reader,Writer Service는 본인과 관련된 도메인 repository만 참조
+
+### 기대효과
+1. ReaderService와 WriterService를 통해 데이터 편집과 관련된 로직을 분리하여 구현
+2. MainService에서 다른 ReaderService,WriterService를 자유롭게 참조해도 순환참조 오류를 방지할 수 있음
+3. MainService의 코드 비대화 문제 해결
+4. 코드 리팩토링시 다른 팀원이 짠 Reader나 Writer Service를 관리하기 편하고 사용할 때 가독성이 좋아짐
+
+</details>
+
+<details>
+  <summary>nGrinder를 활용한 API별 TPS, MTT 관리</summary>
+    https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0
+    
+실행하고 설치하는 과정은 위에 글을 작성하였다.
+
+### 도입 계기
+
+프로젝트를 진행하면서 프론트가 실수로 한번에 요청을 몇천번 보내는 일이 잦았고, 그로인해 서버의 cpu가 100퍼를 찍으며 죽는 일이 자주 발생하였다. 서버에 많은 요청이 들어와도 안정성을 높이기 위해 성능테스트가 필요하다고 판단 하였고 ngrinder를 이용하여 성능테스트를 진행하기로 했다.
+
+### 기대 효과
+
+해당 api별 성능테스트를 통해 어떤 작업에서 리소스를 많이 쓰는지 확인하고, 리소스를 많이 쓰는 작업을 리팩토링 하여 성능을 끌어올렸다.
+<img width="855" alt="image" src="https://github.com/user-attachments/assets/7c75d129-1490-4665-8aa1-b3e0473fe4ba">
+
+예를 들어 image를 저장하는 api의 경우 
+
+TPS(초당 처리량)(14.4→20.9) 
+
+MTT(응답 대기 시간)(274.9ms→186.5ms)로 성능을 개선함
+
+</details>
+
+<details>
+  <summary>첫번째토글</summary>
+  <!-- 내용 -->
+</details>
+
+<details>
+  <summary>첫번째토글</summary>
+  <!-- 내용 -->
+</details>
+
+<details>
+  <summary>첫번째토글</summary>
+  <!-- 내용 -->
+</details>
+
+<details>
+  <summary>첫번째토글</summary>
+  <!-- 내용 -->
+</details>
+
+
+<br />
+# 4. 프로젝트 이슈
+
+# 4. 프로젝트 구성
+## 🛠️ 기술 스택
 ### FE
-|김아진|안희정|정솔빈|
-|:-----:|:---:|:-----:|
-|[<img src="https://github.com/ppochaco.png" width="100px">](https://github.com/ppochaco)|[<img src="https://github.com/anheejeong.png" width="100px">](https://github.com/anheejeong)|[<img src="https://github.com/solempty.png" width="100px">](https://github.com/solempty)|
-|조장|테크리더|타임키퍼|
+<img width="613" alt="image" src="https://github.com/user-attachments/assets/bee5daa4-8922-4c4a-9504-c7a6e8eb6748">
 
-#### [🔗 1인 1역 자세히보기](https://petal-balaur-9dc.notion.site/1-1-949c39380dce416fa0fff7e11215d127)
-
-### 개발 기간
-
-- 2024.08.19~2024.11.15
-
-## 🎯 프로젝트 목표
-
-- “타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼”을 구현
-- 성능테스트를 통해 높은 트래픽 환경에서 안정적인 서비스 제공
-- 객체지향 설계 원칙을 준수하고 확장 가능한 아키텍처를 구축
-- CI/CD 파이프라인 구축을 통해 효율적인 협업이 가능한 프로젝트 지향
-- 실패 케이스를 고려한 견고한 테스트 작성과 높은 테스트 커버리지 유지에 중점
-- [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)를 기반으로 한 코드 컨벤션과 Git 커밋 컨벤션을 준수하여 일관성 있는 코드베이스를 유지
-
-# ⚠️ 프로젝트 이슈
-- [테스트 자동화](https://velog.io/@momnpa333/github-actionsspring-test-%EC%9E%90%EB%8F%99%ED%99%94)
-- [https, 도메인 통합](https://velog.io/@momnpa333/https-nginx-spring-s3-docker-%EB%A1%9C-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
-- [성능 테스트 도입기](https://velog.io/@momnpa333/%EC%84%B1%EB%8A%A5%ED%85%8C%EC%8A%A4%ED%8A%B8-ngrinder-%ED%99%9C%EC%9A%A9%ED%95%98%EA%B8%B0)
-- [실시간 웹 알림 기능을 구현하기 위해 SSE를 사용한 이유 및 Nginx를 통한 배포에서 발생한 이슈](https://velog.io/@hjinshin/%EC%9B%B9-%EC%95%8C%EB%A6%BC-%EA%B5%AC%ED%98%84)
-- [EmbeddedRedis를 TestConfiguration으로 설정했을 때 SpringBootTest에서 Scan되지 않은 이슈](https://velog.io/@hjinshin/TestConfiguration%EC%9D%B4-SpringBootTest%EC%97%90%EC%84%9C-Scan%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EC%9D%B4%EC%9C%A0)
-- [페이징에 대한 n+1 문제 해결 시 Fetch Join을 사용하면 메모리 과부하 현상이 발생할 가능성이 있기 때문에 @EntityGraph을 사용하여 효율적인 해결](https://geonit.tistory.com/72)
-- [결제 기능을 위해 카카오페이 디벨로퍼스 API를 활용하여 구현](https://geonit.tistory.com/71)
-- [Redisson 분산 락을 이용한 일일 방문자 수와 총 방문자 수 증가 로직에 대한 동시성 제어](https://yso8296.tistory.com/29)
-- [프로필 배경 이미지를 S3에 업로드하는 과정의 API 응답속도 지연을 개선하기 위한 @Async를 이용한 비동기 처리](https://yso8296.tistory.com/28)
-
-# 프로젝트 구성
-
-### 기술 스택
-
-#### FE
-![image](https://github.com/user-attachments/assets/6f3da60d-b7b0-4f64-a789-42e1bf06b4b8)
-
-#### BE
-![image](https://github.com/user-attachments/assets/90617785-9cdb-4fec-bc1a-1ef05f72f3de)
+|패키지 매니저|개발 라이브러리|CSS 프레임워크|개발 환경|
+|:-----:|:---:|:-----:|:-----:|
+|node v22.10.0|react v18.3.1|emotion v11.13.0|eslint v8.57.0|
+|npm v10.9.0|typescript v5.5.3||prettier v3.3.3|
+||||vite v5.4.1|
 
 
-- 백엔드 기술 스택 사진 추가해주세용
-
-### 아키텍처
-
-<img width="689" alt="image" src="https://github.com/user-attachments/assets/84f81964-df7f-46af-9983-a5cbc2ec8a62">
-
-### V1. Command,Model 적용
-<img width="707" alt="image" src="https://github.com/user-attachments/assets/79d32aab-a04f-443e-b89b-d33dea8cc7ba">
-
-### V2. Service 분리
-<img width="703" alt="image" src="https://github.com/user-attachments/assets/70cc556d-ead9-4c07-ab7c-f2a99952194b">
-
-### V2.1. Event, Async 적용
-![스크린샷 2024-10-19 221305](https://github.com/user-attachments/assets/76a88b4a-8439-4220-8af7-5d3bc6f30bde)
-
-### V2.2. Redis 적용
-![스크린샷 2024-11-14 031642](https://github.com/user-attachments/assets/9d3ba974-4361-4aa8-9fde-b947bc246b73)
-
-### 📊 ERD
-<img width="706" alt="image" src="https://github.com/user-attachments/assets/e396eeeb-bb66-4a74-b87d-9ba7bbb5578a">
-
-### 테스트 
-* 테스트 커버리지
-![image](https://github.com/user-attachments/assets/d62e2c49-3d52-40dd-9c4a-97517e14dd39)
-
-## 🛠 기술 스택
-
-### 프로젝트 기술 스택
-
-- **Framework:** Spring Boot
-- **Database:** MySQL, Redis, H2 (테스트용)
-- **Infrastructure:** AWS (S3, EC2, etc.)
-- **CI/CD:** GitHub Actions, Docker
-- **Authentication:** OAuth2.0 (Kakao)
-- **Web Server:** NGINX (SSL, 로깅, gzip, proxy_pass 설정)
-- **APIs:** Kakao API, KakaoPay API
-
-### 주요 설정 및 참고 사항
-
-- **NGINX**:
-    - SSL 설정으로 보안 강화
-    - 로그 설정 및 proxy_pass를 통한 경로 라우팅
-- **Redis**: JWT 관리 및 캐싱 용도로 사용
-- **MySQL**: 주 데이터베이스로 활용
-- **EC2 & S3**:
-    - EC2에서 애플리케이션 실행
-    - S3에서 정적 파일 호스팅
-- **GitHub Actions**: 코드 푸시 시 테스트 및 배포 자동화
+### BE
+![제목 없는 다이어그램 drawio (3) (1)](https://github.com/user-attachments/assets/93417d97-904f-4c2f-8e3e-9010fb51112e)
 
 
-## 🌳 GIT 브랜치 전략
+## 🏛️ 아키텍처
+<img width="1152" alt="image (33) (1)" src="https://github.com/user-attachments/assets/7e851684-1330-4295-adaf-b6fbff56d7f1">
 
-## 전체 워크플로우
+## 💾 ERD
+![image (32)](https://github.com/user-attachments/assets/4193e012-a41a-48ef-a113-751d89d8e88f)
 
-[Whokie 프로젝트 레포지토리 워크 플로우]
-<br>
-<img width="399" alt="image" src="https://github.com/user-attachments/assets/e4f55217-1524-4e7a-9f6f-cb62df6016d6">
+<br />
 
-## Git branch 전략
+# 5. 개발 문화
+### [💡 FE 깃허브 프로젝트(주차별 개발 내용)](https://github.com/orgs/kakao-tech-campus-2nd-step3/projects/3/views/1)
+### [📏 팀 그라운드 룰](https://www.notion.so/13e7e96b7e498104925cf9e3ef479c68)
+### [💬 커밋 컨벤션](https://www.notion.so/13e7e96b7e4981729498fe6fbd8d2bf8)
+### 📷 팀 미팅
+<img width="1264" alt="image" src="https://github.com/user-attachments/assets/206e58e3-e9a9-457e-aba0-4ff09f1efec8">
+<img width="1264" alt="image" src="https://github.com/user-attachments/assets/7a75f24f-3032-438e-9e4f-68f141c0faf5">
+<img width="1282" alt="image" src="https://github.com/user-attachments/assets/e7d2c2a7-7fde-4f67-a38a-b3fb75782189">
 
-1. 테크리더가 Weekly 브랜치 생성
-    - ex) Weekly/8
-2. 각자 Issue 브랜치를 생성하여 배정받은 기능 구현
-    - ex) Weekly/8/issue#101
-    - 구현한 기능은 Weekly 브랜치에 PR
-    - 테크리더는 이후 코드리뷰 진행 후 Weekly 브랜치로 merge 진행
-3. 프로젝트 리뷰 미팅 통해 오류 해결 및 보고서 작성
-    - 테크리더는 이후 Weekly에서 Develop으로 conflit 해결하고 merge 진행
-4. 주차별 최종 코드 Develop에서 Master 브랜치로 PR 후 merge 진행
-5. Master에서 Prod 브랜치로 merge 진행
-6. 정해진 기간 동안 담당 멘토와 코드리뷰 진행 (총 6회 수행)
-    - Master에서 Review 브랜치로 merge 진행
-    - 코드리뷰 요청시 테크리더가 Review 브랜치에 PR
-    - Merge는 담당 멘토가 이후 진행
+### [🚨 회의록](https://www.notion.so/13e7e96b7e4981ea9ce8d6e2c5e9f513)
 
-## 브랜치에 대한 간략한 설명
+<br />
 
-- **master** : 최종 브랜치로 develop의 브랜치를 Merge
-- **develop** : 오류 수정 브랜치로 weekly브랜치에서 conflict 해결 후 작업한 기능들을 Merge
-- **weekly** : 주차별 업데이트 코드 추합 브랜치로 이 브랜치를 기준으로 각자 작업한 기능들을 Merge
-- **issue** : 단위 기능을 개발하는 브랜치로 기능 개발이 완료되면 weekly 브랜치에 Merge
-- **prod** : 배포 서버에 영향을 주는 브랜치로 Master의 브랜치를 Merge
-- **review** : 현업 멘토님 코드리뷰 브랜치로 한 주 동안 작성한 기능들을 리뷰받는 브랜치
+# 6. Whokie를 자세히 알고 싶다면..
+### [✏️ Whokie 노션 페이지](https://petal-balaur-9dc.notion.site/Whokie-13e7e96b7e4980d8be59d0053ce13ea0?pvs=74)
+### [🎨 디자인 기획](https://www.figma.com/design/sySqClrjHgqffXymF3oSeG/%ED%9B%84%ED%82%A4-%EB%94%94%EC%9E%90%EC%9D%B8?node-id=0-1&t=POFIyKzBi8EJAouF-1)
 
+# 7. 직접 프로젝트 실행하기
 
-## 🧪 테스트
+### 설치하기
 
-- s3 비동기, 동기 테스트
-- 테스트커버리지
+1. Clone Repository
+    
+    ```tsx
+    git clone https://github.com/kakao-tech-campus-2nd-step3/Team6_FE.git whokie
+    ```
+    
+2. Get in the project folder
+    
+    ```tsx
+    cd whokie
+    ```
+    
+3. Install dependencies via npm or yarn
+    
+    ```tsx
+    npm install
+    ```
+    
+    ```tsx
+    yarn
+    ```
+    
 
-## **프로젝트 중점사항**
+### Quick start
 
-- Service Layer 분리를 통해 순환 참조 가능성 제거
-- nGrinder를 활용한 API별 TPS, MTT 관리
-- N+1 문제 해결 통한 조회 성능 최적화
-- Command, Model 패턴 적용을 통해 변화에 용이한 코드 구조 작성
-- PR/머지 시 자동화된 테스트를 통한 코드 안정성 증가
-- Nginx의 Reversed-Proxy 활용
-- GitHub Actions 및 Docker를 통한 배포 자동화
-- dev/prod 서버 분리를 통한 개발 효율성 증가
-- 카카오 OAuth2.0을 활용한 로그인 구현
-- JWT기반 로그인 인증/인가
-- AWS S3를 이용한 프로필/그룹 이미지 저장
-- Swagger를 통한 API 문서화
-- Nginx와 Certbot을 활용하여 SSL 인증서 관리
-- 관리자 페이지를 통한 사용자, 그룹, 질문 등의 효율적 데이터 관리 및 모니터링
-- Redis를 활용하여 조회 성능 최적화 및 DB 접근 최소화
-- 단위 테스트 및 통합 테스트 작성
-- 로그 작성을 통한 서비스 모니터링 및 문제 추적
-- SSE를 활용하여 클라이언트에게 실시간 알림 이벤트 발행
-- 비동기 처리를 통해 응답 속도 향상
-- Redisson Lock 및 동시성 제어
-- Mock 객체를 통한 테스트 빌드 시간 감소
-- record 도입을 통한 보일러 플레이트 코드 제거
-- 카카오페이 api를 사용하여 결제 기능 구현
-- ConfigurationProperties를 사용하여 환경변수 주입
-- 이슈 발생 시 문서화
-- 주2회 대면 팀미팅을 통해 코드 리뷰 및 피드백
+Run development server
 
+```tsx
+npm start
+```
+
+```tsx
+yarn start
+```
