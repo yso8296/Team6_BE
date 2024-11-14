@@ -12,7 +12,7 @@ https://github.com/user-attachments/assets/6d708a1a-8909-48ab-9969-1301c9bf743a
 
 타인의 긍정적 평가로 나를 알아갈 수 있는 소셜 미디어 플랫폼
 
-### [Whokie 바로가기](https://whokie.com/)
+### [🔗Whokie 바로가기](https://whokie.com/)
 
 
 Whokie와 함께 진정한 나를 알아가보자!
@@ -82,6 +82,13 @@ Whokie와 함께 진정한 나를 알아가보자!
 
 <div align="center">
 
+### BE
+  
+|권다운|김건|신형진|유승욱|
+|:-----:|:---:|:-----:|:---:|
+|[<img src="https://github.com/momnpa333.png" width="100px">](https://github.com/momnpa333)|[<img src="https://github.com/gunGeongun.png" width="100px">](https://github.com/gunGeongun)|[<img src="https://github.com/hjinshin.png" width="100px">](https://github.com/hjinshin)|[<img src="https://github.com/yso8296.png" width="100px">](https://github.com/yso8296)|
+|테크리더|리마인더|리액셔너|기획리더|
+
 ### FE
   
 |김아진|안희정|정솔빈|
@@ -89,12 +96,6 @@ Whokie와 함께 진정한 나를 알아가보자!
 |[<img src="https://github.com/ppochaco.png" width="100px">](https://github.com/ppochaco)|[<img src="https://github.com/anheejeong.png" width="100px">](https://github.com/anheejeong)|[<img src="https://github.com/solempty.png" width="100px">](https://github.com/solempty)|
 |조장|테크리더|타임키퍼|
   
-### BE
-  
-|권다운|김건|신형진|유승욱|
-|:-----:|:---:|:-----:|:---:|
-|[<img src="https://github.com/momnpa333.png" width="100px">](https://github.com/momnpa333)|[<img src="https://github.com/gunGeongun.png" width="100px">](https://github.com/gunGeongun)|[<img src="https://github.com/hjinshin.png" width="100px">](https://github.com/hjinshin)|[<img src="https://github.com/yso8296.png" width="100px">](https://github.com/yso8296)|
-|테크리더|리마인더|리액셔너|기획리더|
 
 ### [🔗 1인 1역 자세히보기](https://petal-balaur-9dc.notion.site/1-1-949c39380dce416fa0fff7e11215d127)
 
@@ -595,7 +596,7 @@ CORS 정책에 따라, 출처가 다른 도메인이나 포트에서 리소스�
 보안상의 이유로 HTTPS에서 HTTP로 리소스를 요청하는 경우에도 CORS 에러가 발생할 수 있다. 이 경우에는 HTTPS로 통신하는 서버에서 HTTP로 요청을 전달하는 것이 아니라, HTTPS로 전달해야 한다.
 
 CORS를 열게되면 다른 도메인에서 서버에 요청을 보낼 때에도 응답을 하게 된다. 보안상 CORS를 닫아두는 것이 좋기 때문에 domain을 통합하여 CORS을 닫았다. 다만 dev 서버에서는 프론트와의 원활한 협업을 위해 열어 두었다.
-```
+```java
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -683,15 +684,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 # 5. 프로젝트 구성
 ## 🛠️ 기술 스택
-### FE
-<img width="613" alt="image" src="https://github.com/user-attachments/assets/bee5daa4-8922-4c4a-9504-c7a6e8eb6748">
-
-|패키지 매니저|개발 라이브러리|CSS 프레임워크|개발 환경|
-|:-----:|:---:|:-----:|:-----:|
-|node v22.10.0|react v18.3.1|emotion v11.13.0|eslint v8.57.0|
-|npm v10.9.0|typescript v5.5.3||prettier v3.3.3|
-||||vite v5.4.1|
-
 
 ### BE
 ![제목 없는 다이어그램 drawio (3) (1)](https://github.com/user-attachments/assets/93417d97-904f-4c2f-8e3e-9010fb51112e)
