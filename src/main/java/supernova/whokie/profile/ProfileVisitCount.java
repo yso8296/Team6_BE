@@ -25,10 +25,6 @@ public class ProfileVisitCount extends BaseTimeEntity {
         return hostId;
     }
 
-    public void add() {
-        dailyVisited++;
-    }
-
     public int getDailyVisited() {
         return dailyVisited;
     }

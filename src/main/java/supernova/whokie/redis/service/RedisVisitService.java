@@ -7,12 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import supernova.whokie.global.annotation.RedissonLock;
-import supernova.whokie.profile.ProfileVisitCount;
-import supernova.whokie.profile.infrastructure.repository.ProfileVisitCountRepository;
-import supernova.whokie.profile.infrastructure.repository.ProfileVisitorRepository;
 import supernova.whokie.profile.service.ProfileVisitReadService;
-import supernova.whokie.profile.service.ProfileVisitWriterService;
-import supernova.whokie.profile.service.ProfileWriterService;
 import supernova.whokie.redis.entity.RedisVisitCount;
 import supernova.whokie.redis.entity.RedisVisitor;
 import supernova.whokie.redis.infrastructure.repository.RedisVisitCountRepository;
@@ -27,25 +22,17 @@ public class RedisVisitService {
     private final RedisVisitorRepository redisVisitorRepository;
     private final RedisVisitCountRepository redisVisitCountRepository;
     private final ProfileVisitReadService profileVisitReadService;
-    private final ProfileVisitorRepository profileVisitorRepository;
-    private final ProfileVisitCountRepository profileVisitCountRepository;
-    private final ProfileWriterService profileWriterService;
 
     @RedissonLock(value = "#hostId")
     public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
-//        RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
-//        log.info("visitorIp: {}", visitorIp);
-//        if(!checkVisited(hostId, visitorIp)) {
-//            redisVisitCount.visit();
-//            redisVisitCountRepository.save(redisVisitCount);
-//        }
-//        // 방문자 로그 기록
-//        saveVisitor(hostId, visitorIp);
-
-        var redisVisitCount = profileWriterService.fdsfs(hostId, visitorIp);
-
-
-
+        RedisVisitCount redisVisitCount = findVisitCountByHostId(hostId);
+        log.info("visitorIp: {}", visitorIp);
+        if(!checkVisited(hostId, visitorIp)) {
+            redisVisitCount.visit();
+            redisVisitCountRepository.save(redisVisitCount);
+        }
+        // 방문자 로그 기록
+        saveVisitor(hostId, visitorIp);
 
         return redisVisitCount;
     }
