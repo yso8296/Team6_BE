@@ -21,7 +21,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     @Query("SELECT g FROM GroupMember g WHERE g.group.id = :groupId")
     Page<GroupMember> findAllByGroupId(Pageable pageable, Long groupId);
 
-    @Query("SELECT g FROM GroupMember g WHERE g.user.id != :userId AND g.group.id = :groupId")
+    @Query("SELECT g FROM GroupMember g JOIN FETCH g.user WHERE g.user.id != :userId AND g.group.id = :groupId")
     List<GroupMember> getGroupMemberJoinFetch(@Param("userId") Long userId, @Param("groupId") Long groupId);
 
     Boolean existsByUserIdAndGroupId(Long userId, Long groupId);
