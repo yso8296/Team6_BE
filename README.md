@@ -77,7 +77,12 @@ Whokie 사용 설명서 링크
 
 ### 기술 스택
 
-![기술스택.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/061c6bac-6bdd-4852-9a0c-7ca1b15dbed9/70ec43de-0c17-484a-b7fc-dc296d8e7a7e/%E1%84%80%E1%85%B5%E1%84%89%E1%85%AE%E1%86%AF%E1%84%89%E1%85%B3%E1%84%90%E1%85%A2%E1%86%A8.svg)
+#### FE
+![image](https://github.com/user-attachments/assets/6f3da60d-b7b0-4f64-a789-42e1bf06b4b8)
+
+#### BE
+![image](https://github.com/user-attachments/assets/90617785-9cdb-4fec-bc1a-1ef05f72f3de)
+
 
 - 백엔드 기술 스택 사진 추가해주세용
 
