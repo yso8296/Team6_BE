@@ -390,8 +390,48 @@ EntityGraph 적용이 성능 향상에 도움이 될 것이라 예상
 </details>
 
 <details>
-  <summary>첫번째토글</summary>
-  <!-- 내용 -->
+  <summary>Redis를 활용하여 조회 성능 최적화 및 DB 접근 최소화</summary>
+  
+### 문제점
+
+- 중복 방문자를 방지하기 위해 프로필 조회 요청마다 방문자 테이블을 조회한다.
+- 이로 인해 RDBMS 디스크에 대한 많은 I/O로 오버헤드 증가 → 응답 속도 저하 및 DB 과부하 발생
+
+### 해결방안
+
+- 방문자수 및 방문자 정보를 Redis에서 관리
+- 방문자 정보 데이터를 Redis에서 DB로 하루에 1번 saveAll()
+<img width="852" alt="image" src="https://github.com/user-attachments/assets/0492cd5a-bf2a-45af-a1db-30f24800ff22">
+
+### 기대 효과
+
+- 메모리 기반의 Redis의 사용으로 응답 속도 개선
+- 방문자 관련 데이터를 Redis에서 관리함으로써 DB 접근 최소화하여 DB에 걸리는 부하 감소
+
+테스트 결과 - 148개의 스레드에서 1분간 Get 요청
+
+- Redis 미적용
+<img width="753" alt="image" src="https://github.com/user-attachments/assets/6b71b9dc-750e-4890-af68-80d6804a31f8">
+<img width="852" alt="image" src="https://github.com/user-attachments/assets/59b7bdbc-9f8f-44aa-8ba4-0681e2ae3efb">
+
+- TPS(초당 처리량): 107.0/sec
+- MTT(하나 처리하는데 걸리는 시간) : 1364.8ms
+- 요청마다 방문자 정보 조회, 입력, 방문자수 업데이트를 위해 DB에 I/O 발생
+- Redis 적용
+<img width="570" alt="image" src="https://github.com/user-attachments/assets/8961cf23-3161-49dc-a422-075baed0adfd">
+<img width="851" alt="image" src="https://github.com/user-attachments/assets/1c73a522-8516-4e7a-ac76-1b67f4f536a1">
+
+- TPS(초당 처리량): 178.5/sec(Redis 적용 전에 비해 **약 66.3% 성능 향상**)
+- MTT(하나 처리하는데 걸리는 시간) : 826.0ms (Redis 적용 전에 비해 **약 40% 시간** 감축)
+- 메모리 기반의 Redis 사용으로 응답 속도 상승
+
+**결론**: 실제 테스트 결과, Redis 적용으로 응답 속도를 **약 1.66배**의 성능 향상을 확인할 수 있었음. 이를 통해 메모리 기반의 Redis가 DB 디스크 기반의 MySQL(RDBMS)에 비해 응답 속도를 개선할 수 있음을 확인할 수 있었다.
+
+테스트를 진행할 때 요청을 보내는 스레드를 증가시켜도 실행된 테스트(Executed Tests) 차이가 크지 않은 것을 확인하였다.
+
+해당 요청은 RedissonLock으로 방문자수 증가 시 동시성을 제어하기 때문에 무분별한 DB 접근이 제한되는 것으로 보인다.
+
+
 </details>
 
 <details>
@@ -567,8 +607,9 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 
 ### BE
 ![제목 없는 다이어그램 drawio (3) (1)](https://github.com/user-attachments/assets/93417d97-904f-4c2f-8e3e-9010fb51112e)
-|Java v21|MYSQL v8.0|Spring v3.3.3|Docker v27.3.1|
-|Redis v7.1.0|h2 v2.2.224|redisson v3.33.0|nginx v1.24.0|
+
+|Java v21|MYSQL v8.0|Spring v3.3.3|Docker v27.3.1|Redis v7.1.0|h2 v2.2.224|redisson v3.33.0|nginx v1.24.0|
+|:-----:|:---:|:-----:|:-----:|:-----:|:---:|:-----:|:-----:|
 
 
 
