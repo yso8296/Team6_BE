@@ -586,6 +586,7 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 
 <details>
   <summary>보안을 위해 CORS 막아두기</summary>
+  
 ### CORS 에러가 발생하는 경우를 알아보자.
 1. 출처가 다른 도메인 또는 포트로 리소스를 요청할 때
 CORS 정책에 따라, 출처가 다른 도메인이나 포트에서 리소스를 요청하는 경우에는 브라우저에서 CORS 에러가 발생한다. 이 경우에는 서버 측에서 Access-Control-Allow-Origin 헤더를 설정하여 요청을 허용해야 한다.
