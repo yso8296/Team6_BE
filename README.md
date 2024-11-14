@@ -623,8 +623,7 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 
 <br />
 
-# 5. 개발 문화
-### [💡 FE 깃허브 프로젝트(주차별 개발 내용)](https://github.com/orgs/kakao-tech-campus-2nd-step3/projects/3/views/1)
+# 6. 개발 문화
 ### [📏 팀 그라운드 룰](https://www.notion.so/13e7e96b7e498104925cf9e3ef479c68)
 ### [💬 커밋 컨벤션](https://www.notion.so/13e7e96b7e4981729498fe6fbd8d2bf8)
 ### 📷 팀 미팅
@@ -636,45 +635,7 @@ public RedisVisitCount visitProfile(Long hostId, String visitorIp) {
 
 <br />
 
-# 6. Whokie를 자세히 알고 싶다면..
+# 7. Whokie를 자세히 알고 싶다면..
 ### [✏️ Whokie 노션 페이지](https://petal-balaur-9dc.notion.site/Whokie-13e7e96b7e4980d8be59d0053ce13ea0?pvs=74)
 ### [🎨 디자인 기획](https://www.figma.com/design/sySqClrjHgqffXymF3oSeG/%ED%9B%84%ED%82%A4-%EB%94%94%EC%9E%90%EC%9D%B8?node-id=0-1&t=POFIyKzBi8EJAouF-1)
 
-# 7. 직접 프로젝트 실행하기
-
-### 설치하기
-
-1. Clone Repository
-    
-    ```tsx
-    git clone https://github.com/kakao-tech-campus-2nd-step3/Team6_FE.git whokie
-    ```
-    
-2. Get in the project folder
-    
-    ```tsx
-    cd whokie
-    ```
-    
-3. Install dependencies via npm or yarn
-    
-    ```tsx
-    npm install
-    ```
-    
-    ```tsx
-    yarn
-    ```
-    
-
-### Quick start
-
-Run development server
-
-```tsx
-npm start
-```
-
-```tsx
-yarn start
-```
